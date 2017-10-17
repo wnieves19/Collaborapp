@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import io.collaborapp.collaborapp.R;
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity  implements OnLoginMethodRequestListener{
 
 
     @Override
@@ -20,4 +20,18 @@ public class LogInActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSignUpClicked() {
+
+    }
+
+    @Override
+    public void onSignInWithGoogleClicked() {
+
+    }
+
+    @Override
+    public void onLoginClicked() {
+
+    }
 }

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Collaborapp</string>
     <string name="title_activity_chat_list">ChatListActivity</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="log_in">LOG IN</string>
 </resources>

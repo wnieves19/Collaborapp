@@ -1,5 +1,7 @@
 package io.collaborapp.collaborapp.login;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import io.collaborapp.collaborapp.BasePresenter;
 import io.collaborapp.collaborapp.BaseView;
 
@@ -14,9 +16,7 @@ public interface LoginContract {
 
         void hideProgress();
 
-        void showUsernameError();
-
-        void showPasswordError();
+        void showError();
 
         void navigateToHome();
     }
@@ -24,9 +24,7 @@ public interface LoginContract {
     interface Presenter extends BasePresenter {
         void validateCredentials();
 
-        void logInWithGoogle();
-
-        void logInWithFacebook();
+        void logInWithGoogle(GoogleSignInAccount account);
 
     }
 }
