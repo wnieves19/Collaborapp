@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="@string/log_in"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/sign_up"/>
+            android:id="@+id/login"/>
 
     </LinearLayout>
 

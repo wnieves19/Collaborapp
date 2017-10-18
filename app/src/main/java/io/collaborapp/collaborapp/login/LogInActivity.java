@@ -1,12 +1,11 @@
 package io.collaborapp.collaborapp.login;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import io.collaborapp.collaborapp.R;
 
-public class LogInActivity extends AppCompatActivity  implements OnLoginMethodRequestListener{
+public class LogInActivity extends AppCompatActivity implements OnLoginMethodRequestListener{
 
 
     @Override
@@ -14,7 +13,7 @@ public class LogInActivity extends AppCompatActivity  implements OnLoginMethodRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        LoginFragment loginFragment = new LoginFragment();
+        LogInOptionsFragment loginFragment = new LogInOptionsFragment();
 
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, loginFragment).commit();
 
@@ -22,7 +21,11 @@ public class LogInActivity extends AppCompatActivity  implements OnLoginMethodRe
 
     @Override
     public void onSignUpClicked() {
-
+        SignUpFragment signUpFragment = new SignUpFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, signUpFragment, "sign_up_fragment")
+                .addToBackStack("sign_up_fragment")
+                .commit();
     }
 
     @Override
@@ -32,6 +35,11 @@ public class LogInActivity extends AppCompatActivity  implements OnLoginMethodRe
 
     @Override
     public void onLoginClicked() {
+        LoginFragment loginFragment = new LoginFragment();
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, loginFragment, "login_fragment")
+                .addToBackStack("login_fragment")
+                .commit();
     }
 }
