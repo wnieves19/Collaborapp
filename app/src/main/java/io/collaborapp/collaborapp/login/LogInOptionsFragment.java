@@ -26,10 +26,10 @@ import io.collaborapp.collaborapp.chat.ChatListActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LogInOptionsFragment extends Fragment implements LoginContract.View, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class LogInOptionsFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private GoogleApiClient mGoogleApiClient;
     public static final int RC_SIGN_IN = 1988;
-    private LoginContract.Presenter mLoginPresenter;
+
     private OnLoginMethodRequestListener onLoginMethodRequestListener;
 
     public LogInOptionsFragment() {
@@ -40,7 +40,7 @@ public class LogInOptionsFragment extends Fragment implements LoginContract.View
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login_options, container, false);
-        mLoginPresenter = new LoginPresenter(this);
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -101,13 +101,14 @@ public class LogInOptionsFragment extends Fragment implements LoginContract.View
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
-                showError();
+                onLoginMethodRequestListener.onLogInError();
             }
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        mLoginPresenter.logInWithGoogle(account);
+        onLoginMethodRequestListener.onSignInWithGoogleClicked(account);
+
     }
 
     @Override
@@ -115,20 +116,7 @@ public class LogInOptionsFragment extends Fragment implements LoginContract.View
         Toast.makeText(getActivity(), "Could not login, try again.", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void setPresenter(LoginContract.Presenter presenter) {
 
-    }
-
-    @Override
-    public void showProgress() {
-
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -141,23 +129,4 @@ public class LogInOptionsFragment extends Fragment implements LoginContract.View
         }
     }
 
-    @Override
-    public void showError() {
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Alert");
-        alertDialog.setMessage("Could not login, try later");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
-
-
-    @Override
-    public void navigateToHome() {
-        startActivity(new Intent(getActivity(), ChatListActivity.class));
-    }
 }

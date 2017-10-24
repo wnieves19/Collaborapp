@@ -16,14 +16,14 @@ import io.collaborapp.collaborapp.R;
  */
 
 public class LoginFragment extends Fragment implements View.OnClickListener{
-    private EditText mUsername, mPassword;
+    private EditText mEmail, mPassword;
     private Button mLoginButton;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container,false);
-        mUsername = view.findViewById(R.id.username);
+        mEmail = view.findViewById(R.id.email);
         mPassword = view.findViewById(R.id.password);
 
         mLoginButton = view.findViewById(R.id.login);
