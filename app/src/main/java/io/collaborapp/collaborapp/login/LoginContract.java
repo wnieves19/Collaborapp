@@ -18,13 +18,18 @@ public interface LoginContract {
 
         void showError();
 
+        void setPresenter(LoginContract.Presenter presenter);
+
         void navigateToHome();
     }
 
     interface Presenter extends BasePresenter {
-        void validateCredentials();
 
         void logInWithGoogle(GoogleSignInAccount account);
+
+        void logInWithFirebaseEmailAndPassword(String email, String password);
+
+        void signUpWithFirebaseEmailAndPassword(String email, String password);
 
     }
 }

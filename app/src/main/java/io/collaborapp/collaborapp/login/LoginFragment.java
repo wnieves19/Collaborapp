@@ -1,5 +1,6 @@
 package io.collaborapp.collaborapp.login;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,8 @@ import io.collaborapp.collaborapp.R;
 
 public class LoginFragment extends Fragment implements View.OnClickListener{
     private EditText mEmail, mPassword;
-    private Button mLoginButton;
+    private LoginActionsListener onLoginActionsListener;
+    private Button mLogin;
 
     @Nullable
     @Override
@@ -26,7 +28,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         mEmail = view.findViewById(R.id.email);
         mPassword = view.findViewById(R.id.password);
 
-        mLoginButton = view.findViewById(R.id.login);
+        mLogin = view.findViewById(R.id.login);
+        mLogin.setOnClickListener(this);
         return view;
     }
 
@@ -34,8 +37,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.login:
-                //TODO: call presenter method for logging in
+                onLoginActionsListener.onLoginRequest(mEmail.getText().toString(), mPassword.getText().toString());
                 break;
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            onLoginActionsListener = (LoginActionsListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnHeadlineSelectedListener");
         }
     }
 }
