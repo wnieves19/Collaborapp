@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp.login;
+package io.collaborapp.collaborapp.authentication;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
@@ -9,7 +9,7 @@ import io.collaborapp.collaborapp.BaseView;
  * Created by wilfredonieves on 4/28/17.
  */
 
-public interface LoginContract {
+public interface AuthenticationContract {
 
     interface View extends BaseView<Presenter> {
         void showProgress();
@@ -18,7 +18,7 @@ public interface LoginContract {
 
         void showError();
 
-        void setPresenter(LoginContract.Presenter presenter);
+        void setPresenter(AuthenticationContract.Presenter presenter);
 
         void navigateToHome();
     }
@@ -27,9 +27,9 @@ public interface LoginContract {
 
         void logInWithGoogle(GoogleSignInAccount account);
 
-        void logInWithFirebaseEmailAndPassword(String email, String password);
+        void logInWithEmailAndPassword(String email, String password);
 
-        void signUpWithFirebaseEmailAndPassword(String email, String password);
+        void signUpWithEmailAndPassword(String email, String password);
 
     }
 }

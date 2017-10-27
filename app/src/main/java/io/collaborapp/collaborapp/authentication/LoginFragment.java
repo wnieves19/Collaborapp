@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp.login;
+package io.collaborapp.collaborapp.authentication;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import butterknife.BindView;
 import io.collaborapp.collaborapp.R;
 
 /**
@@ -17,19 +18,20 @@ import io.collaborapp.collaborapp.R;
  */
 
 public class LoginFragment extends Fragment implements View.OnClickListener{
-    private EditText mEmail, mPassword;
-    private LoginActionsListener onLoginActionsListener;
+    @BindView(R.id.email)
+    EditText mEmail;
+    @BindView(R.id.password)
+    EditText mPassword;
+    private AuthenticationActionsListener onAuthenticationActionsListener;
     private Button mLogin;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container,false);
-        mEmail = view.findViewById(R.id.email);
-        mPassword = view.findViewById(R.id.password);
 
-        mLogin = view.findViewById(R.id.login);
-        mLogin.setOnClickListener(this);
+        view.findViewById(R.id.login).setOnClickListener(this);
+
         return view;
     }
 
@@ -37,7 +39,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.login:
-                onLoginActionsListener.onLoginRequest(mEmail.getText().toString(), mPassword.getText().toString());
+                onAuthenticationActionsListener.onLoginRequest(mEmail.getText().toString(), mPassword.getText().toString());
                 break;
         }
     }
@@ -46,7 +48,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            onLoginActionsListener = (LoginActionsListener) context;
+            onAuthenticationActionsListener = (AuthenticationActionsListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");

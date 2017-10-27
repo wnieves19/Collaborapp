@@ -1,10 +1,10 @@
-package io.collaborapp.collaborapp.login;
+package io.collaborapp.collaborapp.authentication;
 
 /**
  * Created by wilfredonieves on 10/16/17.
  */
 
-public interface LoginActionsListener {
+public interface AuthenticationActionsListener {
     void onSignUpOptionClicked();
 
     void onLoginOptionClicked();

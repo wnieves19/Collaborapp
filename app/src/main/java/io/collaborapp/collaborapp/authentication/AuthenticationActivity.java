@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp.login;
+package io.collaborapp.collaborapp.authentication;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,8 +22,8 @@ import io.collaborapp.collaborapp.chat.ChatListActivity;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
-public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, LoginContract.View, LoginActionsListener{
-    private LoginContract.Presenter mLoginPresenter;
+public class AuthenticationActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, AuthenticationContract.View, AuthenticationActionsListener {
+    private AuthenticationContract.Presenter mLoginPresenter;
     private ProgressBar mProgressBar;
     private GoogleApiClient mGoogleApiClient;
     public static final int RC_SIGN_IN = 1988;
@@ -32,7 +32,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mLoginPresenter = new LoginPresenter(this);
+        mLoginPresenter = new AuthenticationPresenter(this);
         mProgressBar = findViewById(R.id.indeterminateBar);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -45,10 +45,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        if (savedInstanceState == null)
-        {
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new LogInOptionsFragment())
+                    .replace(R.id.fragment_container, new AuthenticationFragment())
                     .commit();
         }
     }
@@ -68,6 +67,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             }
         }
     }
+
     @Override
     public void onSignUpOptionClicked() {
         SignUpFragment signUpFragment = new SignUpFragment();
@@ -95,16 +95,16 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onLoginRequest(String email, String password) {
-        mLoginPresenter.logInWithFirebaseEmailAndPassword(email, password);
+        mLoginPresenter.logInWithEmailAndPassword(email, password);
     }
 
     @Override
     public void onSignUpRequest(String email, String password) {
-        mLoginPresenter.signUpWithFirebaseEmailAndPassword(email, password);
+        mLoginPresenter.signUpWithEmailAndPassword(email, password);
     }
 
     @Override
-    public void setPresenter(LoginContract.Presenter presenter) {
+    public void setPresenter(AuthenticationContract.Presenter presenter) {
         mLoginPresenter = checkNotNull(presenter, "Presenter cannot be null");
     }
 

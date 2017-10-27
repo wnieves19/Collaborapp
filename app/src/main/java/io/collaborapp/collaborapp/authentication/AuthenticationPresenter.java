@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp.login;
+package io.collaborapp.collaborapp.authentication;
 
 
 import android.support.annotation.NonNull;
@@ -14,16 +14,15 @@ import com.google.firebase.auth.GoogleAuthProvider;
 /**
  * Created by wilfredonieves on 10/16/17.
  */
-//TODO: Remove mAuth dependency and move to a data/model class
-public class LoginPresenter implements LoginContract.Presenter {
-    private final LoginContract.View mLoginView;
+//TODO: Remove mAuth dependency and move to data/model
+public class AuthenticationPresenter implements AuthenticationContract.Presenter {
+    private final AuthenticationContract.View mAuthenticationView;
     private FirebaseAuth mAuth;
 
-    public LoginPresenter(LoginContract.View loginView) {
-        this.mLoginView = loginView;
-        mLoginView.setPresenter(this);
+    public AuthenticationPresenter(AuthenticationContract.View authenticationView) {
+        this.mAuthenticationView = authenticationView;
+        mAuthenticationView.setPresenter(this);
     }
-
 
     @Override
     public void logInWithGoogle(GoogleSignInAccount account) {
@@ -38,8 +37,8 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void logInWithFirebaseEmailAndPassword(String email, String password) {
-        mLoginView.showProgress();
+    public void logInWithEmailAndPassword(String email, String password) {
+        mAuthenticationView.showProgress();
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -49,8 +48,8 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void signUpWithFirebaseEmailAndPassword(String email, String password) {
-        mLoginView.showProgress();
+    public void signUpWithEmailAndPassword(String email, String password) {
+        mAuthenticationView.showProgress();
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -60,11 +59,11 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     private void processSignInResponse(@NonNull Task<AuthResult> task) {
-        mLoginView.hideProgress();
+        mAuthenticationView.hideProgress();
         if (task.isSuccessful()) {
-            mLoginView.navigateToHome();
+            mAuthenticationView.navigateToHome();
         } else {
-            mLoginView.showError();
+            mAuthenticationView.showError();
         }
     }
 
