@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
 
 /**
@@ -23,13 +24,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     @BindView(R.id.password)
     EditText mPassword;
     private AuthenticationActionsListener onAuthenticationActionsListener;
-    private Button mLogin;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container,false);
-
+        ButterKnife.bind(this, view);
         view.findViewById(R.id.login).setOnClickListener(this);
 
         return view;

@@ -31,5 +31,7 @@ public interface AuthenticationContract {
 
         void signUpWithEmailAndPassword(String email, String password);
 
+        void setView(AuthenticationContract.View view);
+
     }
 }

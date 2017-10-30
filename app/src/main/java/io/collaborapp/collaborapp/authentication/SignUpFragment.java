@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
 
 
@@ -27,7 +28,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
-
+        ButterKnife.bind(this, view);
         view.findViewById(R.id.sign_up).setOnClickListener(this);
 
         return view;

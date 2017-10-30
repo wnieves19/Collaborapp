@@ -1,76 +1,75 @@
 package io.collaborapp.collaborapp.authentication;
 
 
-import android.support.annotation.NonNull;
-
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
+
+import io.collaborapp.collaborapp.data.manager.AuthenticationManager;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by wilfredonieves on 10/16/17.
  */
-//TODO: Remove mAuth dependency and move to data/model
 public class AuthenticationPresenter implements AuthenticationContract.Presenter {
-    private final AuthenticationContract.View mAuthenticationView;
-    private FirebaseAuth mAuth;
+    private AuthenticationContract.View mAuthenticationView;
 
-    public AuthenticationPresenter(AuthenticationContract.View authenticationView) {
-        this.mAuthenticationView = authenticationView;
-        mAuthenticationView.setPresenter(this);
+    private AuthenticationManager mAuthManager;
+
+    private Disposable mAuthSubscription;
+
+    public AuthenticationPresenter(AuthenticationManager authManager) {
+        this.mAuthManager = authManager;
     }
 
     @Override
     public void logInWithGoogle(GoogleSignInAccount account) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        processSignInResponse(task);
-                    }
-                });
+
+        mAuthSubscription = mAuthManager.signInWithGoogle(account)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onTaskSuccess, this::onLoginFailed);
+
     }
 
     @Override
     public void logInWithEmailAndPassword(String email, String password) {
         mAuthenticationView.showProgress();
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                processSignInResponse(task);
-            }
-        });
+        mAuthSubscription = mAuthManager.signInWithEmail(email, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onTaskSuccess, this::onLoginFailed);
     }
 
     @Override
     public void signUpWithEmailAndPassword(String email, String password) {
         mAuthenticationView.showProgress();
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                processSignInResponse(task);
-            }
-        });
+        mAuthSubscription = mAuthManager.createNewUser(email, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onTaskSuccess, this::onLoginFailed);
+
     }
 
-    private void processSignInResponse(@NonNull Task<AuthResult> task) {
+    @Override
+    public void setView(AuthenticationContract.View view) {
+        this.mAuthenticationView = view;
+    }
+
+    private void onTaskSuccess(AuthResult authResult) {
         mAuthenticationView.hideProgress();
-        if (task.isSuccessful()) {
-            mAuthenticationView.navigateToHome();
-        } else {
-            mAuthenticationView.showError();
-        }
+        mAuthenticationView.navigateToHome();
     }
 
+    private void onLoginFailed(Throwable e) {
+        mAuthenticationView.hideProgress();
+        mAuthenticationView.showError();
+    }
 
     @Override
     public void subscribe() {
-        mAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override

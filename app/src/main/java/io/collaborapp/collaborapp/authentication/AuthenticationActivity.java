@@ -17,13 +17,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import javax.inject.Inject;
+
+import io.collaborapp.collaborapp.BaseApplication;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.chat.ChatListActivity;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
 public class AuthenticationActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, AuthenticationContract.View, AuthenticationActionsListener {
-    private AuthenticationContract.Presenter mLoginPresenter;
+
+    @Inject
+    AuthenticationContract.Presenter mAuthenticationPresenter;
+
     private ProgressBar mProgressBar;
     private GoogleApiClient mGoogleApiClient;
     public static final int RC_SIGN_IN = 1988;
@@ -32,7 +38,8 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mLoginPresenter = new AuthenticationPresenter(this);
+//        mAuthenticationPresenter = new AuthenticationPresenter(this);
+        ((BaseApplication) getApplication()).createAuthenticationComponent().inject(this);
         mProgressBar = findViewById(R.id.indeterminateBar);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -44,6 +51,9 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        mAuthenticationPresenter.setView(this);
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -61,7 +71,7 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                mLoginPresenter.logInWithGoogle(account);
+                mAuthenticationPresenter.logInWithGoogle(account);
             } else {
                 showError();
             }
@@ -95,17 +105,17 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
 
     @Override
     public void onLoginRequest(String email, String password) {
-        mLoginPresenter.logInWithEmailAndPassword(email, password);
+        mAuthenticationPresenter.logInWithEmailAndPassword(email, password);
     }
 
     @Override
     public void onSignUpRequest(String email, String password) {
-        mLoginPresenter.signUpWithEmailAndPassword(email, password);
+        mAuthenticationPresenter.signUpWithEmailAndPassword(email, password);
     }
 
     @Override
     public void setPresenter(AuthenticationContract.Presenter presenter) {
-        mLoginPresenter = checkNotNull(presenter, "Presenter cannot be null");
+        mAuthenticationPresenter = checkNotNull(presenter, "Presenter cannot be null");
     }
 
     @Override
@@ -137,20 +147,20 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     public void onPause() {
         super.onPause();
         disconnectApiClient();
-        mLoginPresenter.unsubscribe();
+        mAuthenticationPresenter.unsubscribe();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         disconnectApiClient();
-        mLoginPresenter.unsubscribe();
+        mAuthenticationPresenter.unsubscribe();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mLoginPresenter.subscribe();
+        mAuthenticationPresenter.subscribe();
     }
 
     @Override
