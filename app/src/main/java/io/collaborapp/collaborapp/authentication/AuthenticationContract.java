@@ -16,7 +16,7 @@ public interface AuthenticationContract {
 
         void hideProgress();
 
-        void showError();
+        void showError(String message);
 
         void setPresenter(AuthenticationContract.Presenter presenter);
 

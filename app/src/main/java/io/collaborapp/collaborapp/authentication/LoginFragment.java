@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import butterknife.BindView;
@@ -23,7 +22,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     EditText mEmail;
     @BindView(R.id.password)
     EditText mPassword;
-    private AuthenticationActionsListener onAuthenticationActionsListener;
+    private OnLogInRequestListener onLogInRequestListener;
 
     @Nullable
     @Override
@@ -39,7 +38,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.login:
-                onAuthenticationActionsListener.onLoginRequest(mEmail.getText().toString(), mPassword.getText().toString());
+                onLogInRequestListener.onLoginRequest(mEmail.getText().toString(), mPassword.getText().toString());
                 break;
         }
     }
@@ -48,10 +47,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            onAuthenticationActionsListener = (AuthenticationActionsListener) context;
+            onLogInRequestListener = (OnLogInRequestListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
+    }
+    public interface OnLogInRequestListener {
+        void onLoginRequest(String email, String password);
     }
 }

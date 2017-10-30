@@ -58,4 +58,12 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
         }
     }
 
+    public interface AuthenticationActionsListener {
+        void onSignUpOptionClicked();
+
+        void onLoginOptionClicked();
+
+        void onSignInWithGoogleClicked();
+    }
+
 }

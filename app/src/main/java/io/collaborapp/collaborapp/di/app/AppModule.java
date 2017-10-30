@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp;
+package io.collaborapp.collaborapp.di.app;
 
 import android.app.Application;
 import android.content.Context;

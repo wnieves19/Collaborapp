@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +21,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.confirmPassword)
     EditText mPasswordConfirm;
 
-    private AuthenticationActionsListener onAuthenticationActionsListener;
+    private OnSignUpRequestListener onSignUpRequestListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +36,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            onAuthenticationActionsListener = (AuthenticationActionsListener) context;
+            onSignUpRequestListener = (OnSignUpRequestListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
@@ -50,8 +48,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             //TODO: Validate mPassword & mPasswordConfirm are the same
             case R.id.sign_up:
-                onAuthenticationActionsListener.onSignUpRequest(mEmail.getText().toString(), mPassword.getText().toString());
+                onSignUpRequestListener.onSignUpRequest(mEmail.getText().toString(), mPassword.getText().toString());
                 break;
         }
+    }
+    public interface OnSignUpRequestListener{
+        void onSignUpRequest(String email, String password);
     }
 }

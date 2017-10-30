@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp.authentication;
+package io.collaborapp.collaborapp.di.authentication;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

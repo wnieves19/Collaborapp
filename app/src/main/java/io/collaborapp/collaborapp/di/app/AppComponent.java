@@ -1,10 +1,10 @@
-package io.collaborapp.collaborapp;
+package io.collaborapp.collaborapp.di.app;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.collaborapp.collaborapp.authentication.AuthenticationComponent;
-import io.collaborapp.collaborapp.authentication.AuthenticationModule;
+import io.collaborapp.collaborapp.di.authentication.AuthenticationComponent;
+import io.collaborapp.collaborapp.di.authentication.AuthenticationModule;
 
 /**
  * Created by wilfredonieves on 10/27/17.

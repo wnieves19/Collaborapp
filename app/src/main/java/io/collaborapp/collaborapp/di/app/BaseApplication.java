@@ -1,9 +1,9 @@
-package io.collaborapp.collaborapp;
+package io.collaborapp.collaborapp.di.app;
 
 import android.app.Application;
 
-import io.collaborapp.collaborapp.authentication.AuthenticationComponent;
-import io.collaborapp.collaborapp.authentication.AuthenticationModule;
+import io.collaborapp.collaborapp.di.authentication.AuthenticationComponent;
+import io.collaborapp.collaborapp.di.authentication.AuthenticationModule;
 
 /**
  * Created by wilfredonieves on 10/27/17.
@@ -18,10 +18,10 @@ public class BaseApplication extends Application {
         mAppComponent = createAppComponent();
     }
 
-    private io.collaborapp.collaborapp.AppComponent createAppComponent()
+    private AppComponent createAppComponent()
     {
         return DaggerAppComponent.builder()
-                .appModule(new io.collaborapp.collaborapp.AppModule(this))
+                .appModule(new AppModule(this))
                 .build();
     }
     public AuthenticationComponent createAuthenticationComponent()

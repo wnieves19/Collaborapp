@@ -25,7 +25,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
     @Override
     public void logInWithGoogle(GoogleSignInAccount account) {
-
+        mAuthenticationView.showProgress();
         mAuthSubscription = mAuthManager.signInWithGoogle(account)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,7 +64,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
     private void onLoginFailed(Throwable e) {
         mAuthenticationView.hideProgress();
-        mAuthenticationView.showError();
+        mAuthenticationView.showError(e.getMessage());
     }
 
     @Override

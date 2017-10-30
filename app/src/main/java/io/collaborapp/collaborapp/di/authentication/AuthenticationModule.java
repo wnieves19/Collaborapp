@@ -1,7 +1,9 @@
-package io.collaborapp.collaborapp.authentication;
+package io.collaborapp.collaborapp.di.authentication;
 
 import dagger.Module;
 import dagger.Provides;
+import io.collaborapp.collaborapp.authentication.AuthenticationContract;
+import io.collaborapp.collaborapp.authentication.AuthenticationPresenter;
 import io.collaborapp.collaborapp.data.manager.AuthenticationManager;
 import io.collaborapp.collaborapp.data.manager.AuthenticationManagerImpl;
 

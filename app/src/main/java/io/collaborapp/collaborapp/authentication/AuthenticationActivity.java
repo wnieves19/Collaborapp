@@ -19,13 +19,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import javax.inject.Inject;
 
-import io.collaborapp.collaborapp.BaseApplication;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.chat.ChatListActivity;
+import io.collaborapp.collaborapp.di.app.BaseApplication;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
-public class AuthenticationActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, AuthenticationContract.View, AuthenticationActionsListener {
+public class AuthenticationActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
+        AuthenticationContract.View,
+        LoginFragment.OnLogInRequestListener,
+        SignUpFragment.OnSignUpRequestListener,
+        AuthenticationFragment.AuthenticationActionsListener {
 
     @Inject
     AuthenticationContract.Presenter mAuthenticationPresenter;
@@ -73,7 +77,7 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
                 GoogleSignInAccount account = result.getSignInAccount();
                 mAuthenticationPresenter.logInWithGoogle(account);
             } else {
-                showError();
+                showError("Could not login with Google account.");
             }
         }
     }
@@ -129,11 +133,11 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     }
 
     @Override
-    public void showError() {
+    public void showError(String message) {
         hideProgress();
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Alert");
-        alertDialog.setMessage("Could not login, try later");
+        alertDialog.setMessage(message);
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
