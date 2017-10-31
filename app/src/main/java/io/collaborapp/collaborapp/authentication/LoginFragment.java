@@ -17,7 +17,7 @@ import io.collaborapp.collaborapp.R;
  * Created by wilfredonieves on 10/17/17.
  */
 
-public class LoginFragment extends Fragment implements View.OnClickListener{
+public class LoginFragment extends BaseAuthenticationFragment implements View.OnClickListener{
     @BindView(R.id.email)
     EditText mEmail;
     @BindView(R.id.password)
@@ -53,6 +53,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     + " must implement OnHeadlineSelectedListener");
         }
     }
+
+    @Override
+    void setEmailError() {
+        mEmail.setError("Enter a valid email");
+    }
+
+    @Override
+    void setPasswordError() {
+        mPassword.setError("Enter a valid password");
+    }
+
     public interface OnLogInRequestListener {
         void onLoginRequest(String email, String password);
     }

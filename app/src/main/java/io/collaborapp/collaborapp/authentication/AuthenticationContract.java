@@ -18,6 +18,12 @@ public interface AuthenticationContract {
 
         void showError(String message);
 
+        void setErrorEmailField();
+
+        void setErrorPasswordField();
+
+        void setErrorPasswordConfirm();
+
         void setPresenter(AuthenticationContract.Presenter presenter);
 
         void navigateToHome();
@@ -29,7 +35,7 @@ public interface AuthenticationContract {
 
         void logInWithEmailAndPassword(String email, String password);
 
-        void signUpWithEmailAndPassword(String email, String password);
+        void signUpWithEmailAndPassword(String email, String password, String passwordConfirmation);
 
         void setView(AuthenticationContract.View view);
 

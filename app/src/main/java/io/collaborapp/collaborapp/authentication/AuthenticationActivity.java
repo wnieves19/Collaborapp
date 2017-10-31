@@ -38,11 +38,13 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     private GoogleApiClient mGoogleApiClient;
     public static final int RC_SIGN_IN = 1988;
 
+    private BaseAuthenticationFragment mLoginFragment;
+    private BaseAuthenticationFragment mSignUpFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        mAuthenticationPresenter = new AuthenticationPresenter(this);
         ((BaseApplication) getApplication()).createAuthenticationComponent().inject(this);
         mProgressBar = findViewById(R.id.indeterminateBar);
 
@@ -84,18 +86,18 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
 
     @Override
     public void onSignUpOptionClicked() {
-        SignUpFragment signUpFragment = new SignUpFragment();
+        mSignUpFragment = new SignUpFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, signUpFragment, "sign_up_fragment")
+                .replace(R.id.fragment_container, mSignUpFragment, "sign_up_fragment")
                 .addToBackStack("sign_up_fragment")
                 .commit();
     }
 
     @Override
     public void onLoginOptionClicked() {
-        LoginFragment loginFragment = new LoginFragment();
+        mLoginFragment = new LoginFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, loginFragment, "login_fragment")
+                .replace(R.id.fragment_container, mLoginFragment, "login_fragment")
                 .addToBackStack("login_fragment")
                 .commit();
     }
@@ -113,8 +115,8 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     }
 
     @Override
-    public void onSignUpRequest(String email, String password) {
-        mAuthenticationPresenter.signUpWithEmailAndPassword(email, password);
+    public void onSignUpRequest(String email, String password, String passwordConfirmation) {
+        mAuthenticationPresenter.signUpWithEmailAndPassword(email, password, passwordConfirmation);
     }
 
     @Override
@@ -139,12 +141,23 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
         alertDialog.setTitle("Alert");
         alertDialog.setMessage(message);
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                (dialog, which) -> dialog.dismiss());
         alertDialog.show();
+    }
+
+    @Override
+    public void setErrorEmailField() {
+        ((BaseAuthenticationFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).setEmailError();
+    }
+
+    @Override
+    public void setErrorPasswordField() {
+        ((BaseAuthenticationFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).setPasswordError();
+    }
+
+    @Override
+    public void setErrorPasswordConfirm() {
+        ((SignUpFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).setPasswordConfirmError();
     }
 
     @Override
@@ -183,4 +196,5 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
         hideProgress();
         startActivity(new Intent(this, ChatListActivity.class));
     }
+
 }

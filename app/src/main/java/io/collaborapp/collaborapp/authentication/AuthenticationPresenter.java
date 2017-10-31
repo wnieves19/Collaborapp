@@ -6,6 +6,7 @@ import com.google.firebase.auth.AuthResult;
 
 import io.collaborapp.collaborapp.data.manager.AuthenticationManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -18,6 +19,8 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
     private AuthenticationManager mAuthManager;
 
     private Disposable mAuthSubscription;
+
+    private final static int MIN_CHARS_PASSWORD = 5;
 
     public AuthenticationPresenter(AuthenticationManager authManager) {
         this.mAuthManager = authManager;
@@ -35,6 +38,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
     @Override
     public void logInWithEmailAndPassword(String email, String password) {
+        if (!validateFields(email, password, null)) return;
         mAuthenticationView.showProgress();
         mAuthSubscription = mAuthManager.signInWithEmail(email, password)
                 .subscribeOn(Schedulers.io())
@@ -43,13 +47,35 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
     }
 
     @Override
-    public void signUpWithEmailAndPassword(String email, String password) {
+    public void signUpWithEmailAndPassword(String email, String password, String passwordConfirmation) {
+        if (!validateFields(email, password, passwordConfirmation)) return;
+        if (!password.equals(passwordConfirmation)) {
+            mAuthenticationView.setErrorPasswordConfirm();
+            mAuthenticationView.showError("Password and password confirmation are not the same");
+            return;
+        }
         mAuthenticationView.showProgress();
         mAuthSubscription = mAuthManager.createNewUser(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onTaskSuccess, this::onLoginFailed);
 
+    }
+
+    private boolean validateFields(String email, String password, @Nullable String passwordConfirm) {
+        boolean validate = true;
+        if (email.isEmpty()) {
+            mAuthenticationView.setErrorEmailField();
+            validate = false;
+        }
+        if (password.isEmpty() || password.length() < MIN_CHARS_PASSWORD) {
+            mAuthenticationView.setErrorPasswordField();
+            validate = false;
+        }
+        if (passwordConfirm!=null && passwordConfirm.isEmpty()){
+            mAuthenticationView.setErrorPasswordConfirm();
+        }
+        return validate;
     }
 
     @Override

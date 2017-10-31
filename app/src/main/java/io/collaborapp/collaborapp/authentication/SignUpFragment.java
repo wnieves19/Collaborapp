@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
 
 
-public class SignUpFragment extends Fragment implements View.OnClickListener {
+public class SignUpFragment extends BaseAuthenticationFragment implements View.OnClickListener {
     @BindView(R.id.email)
     EditText mEmail;
     @BindView(R.id.password)
@@ -46,13 +46,28 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //TODO: Validate mPassword & mPasswordConfirm are the same
             case R.id.sign_up:
-                onSignUpRequestListener.onSignUpRequest(mEmail.getText().toString(), mPassword.getText().toString());
+                onSignUpRequestListener.onSignUpRequest(mEmail.getText().toString(), mPassword.getText().toString(), mPasswordConfirm.getText().toString());
                 break;
         }
     }
+
+    @Override
+    void setEmailError() {
+        mEmail.setError("Enter a valid email");
+    }
+
+    @Override
+    void setPasswordError() {
+        mPassword.setError("Enter a valid password");
+    }
+
+    public void setPasswordConfirmError(){
+        mPasswordConfirm.setError("Enter a valid password confirmation");
+    }
+
+
     public interface OnSignUpRequestListener{
-        void onSignUpRequest(String email, String password);
+        void onSignUpRequest(String email, String password, String passwordConfirmation);
     }
 }
