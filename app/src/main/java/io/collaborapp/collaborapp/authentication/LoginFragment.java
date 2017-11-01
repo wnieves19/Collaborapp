@@ -44,7 +44,6 @@ public class LoginFragment extends Fragment implements AuthenticationContract.Vi
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
         ((BaseApplication) getActivity().getApplication()).createAuthenticationComponent().inject(this);
-
         view.findViewById(R.id.login).setOnClickListener(this);
         mAuthenticationPresenter.setView(this);
 

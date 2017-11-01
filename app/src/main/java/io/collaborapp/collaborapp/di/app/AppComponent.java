@@ -1,5 +1,8 @@
 package io.collaborapp.collaborapp.di.app;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -16,4 +19,5 @@ import io.collaborapp.collaborapp.di.authentication.AuthenticationModule;
 public interface AppComponent
 {
     AuthenticationComponent plus(AuthenticationModule authenticationModule);
+
 }

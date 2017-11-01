@@ -1,5 +1,10 @@
 package io.collaborapp.collaborapp.di.authentication;
 
+import android.support.v4.app.Fragment;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 import dagger.Module;
 import dagger.Provides;
 import io.collaborapp.collaborapp.authentication.AuthenticationContract;
@@ -20,7 +25,9 @@ public class AuthenticationModule {
 
     @Provides
     @AuthenticationScope
-    AuthenticationManager provideInteractor() {
-        return new AuthenticationManagerImpl();
+    AuthenticationManager providesManager(FirebaseAuth firebaseAuth,
+                                          FirebaseDatabase firebaseDatabase) {
+        return new AuthenticationManagerImpl(firebaseAuth, firebaseDatabase);
     }
+
 }

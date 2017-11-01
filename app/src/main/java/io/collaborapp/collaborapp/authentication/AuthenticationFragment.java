@@ -184,6 +184,7 @@ public class AuthenticationFragment extends Fragment implements GoogleApiClient.
     public void navigateToHome() {
         Intent intent = new Intent(getActivity(), ChatListActivity.class);
         startActivity(intent);
+        getActivity().finish();
     }
 
     @Override

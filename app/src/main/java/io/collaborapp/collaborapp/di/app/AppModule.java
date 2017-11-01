@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,27 +17,33 @@ import dagger.Provides;
  */
 
 @Module
-public class AppModule
-{
+public class AppModule {
     private Context context;
 
-    AppModule(Application application)
-    {
+    AppModule(Application application) {
         context = application;
     }
 
     @Provides
     @Singleton
-    public Context provideContext()
-    {
+    public Context provideContext() {
         return context;
     }
 
     @Provides
     @Singleton
-    public Resources provideResources(Context context)
-    {
+    public Resources provideResources(Context context) {
         return context.getResources();
+    }
+
+    @Provides
+    FirebaseDatabase providesFirebaseDatabase() {
+        return FirebaseDatabase.getInstance();
+    }
+
+    @Provides
+    FirebaseAuth providesFirebaseAuth() {
+        return FirebaseAuth.getInstance();
     }
 }
 

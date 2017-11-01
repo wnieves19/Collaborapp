@@ -42,10 +42,8 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         ButterKnife.bind(this, view);
         view.findViewById(R.id.sign_up).setOnClickListener(this);
-        ((BaseApplication) getActivity().getApplication()).createAuthenticationComponent().inject(this);
-
         mAuthenticationPresenter.setView(this);
-
+        ((BaseApplication) getActivity().getApplication()).createAuthenticationComponent().inject(this);
         return view;
     }
 
@@ -57,6 +55,7 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
                 break;
         }
     }
+
 
     @Override
     public void showProgress() {
