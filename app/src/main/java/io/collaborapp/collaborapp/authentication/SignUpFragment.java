@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.chat.ChatListActivity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
@@ -22,7 +24,7 @@ import io.collaborapp.collaborapp.di.app.BaseApplication;
 import static dagger.internal.Preconditions.checkNotNull;
 
 
-public class SignUpFragment extends Fragment implements AuthenticationContract.View, View.OnClickListener {
+public class SignUpFragment extends Fragment implements AuthenticationContract.View {
 
     @BindView(R.id.email)
     EditText mEmail;
@@ -41,21 +43,16 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         ButterKnife.bind(this, view);
-        view.findViewById(R.id.sign_up).setOnClickListener(this);
         mAuthenticationPresenter.setView(this);
         ((BaseApplication) getActivity().getApplication()).createAuthenticationComponent().inject(this);
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_up:
-                mAuthenticationPresenter.signUpWithEmailAndPassword(mEmail.getText().toString(), mPassword.getText().toString(), mPasswordConfirm.getText().toString());
-                break;
-        }
-    }
+    @OnClick(R.id.sign_up)
+    public void signUp(Button button) {
+        mAuthenticationPresenter.signUpWithEmailAndPassword(mEmail.getText().toString(), mPassword.getText().toString(), mPasswordConfirm.getText().toString());
 
+    }
 
     @Override
     public void showProgress() {

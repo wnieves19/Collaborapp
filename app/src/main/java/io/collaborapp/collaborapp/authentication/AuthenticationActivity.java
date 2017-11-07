@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.chat.ChatListActivity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;

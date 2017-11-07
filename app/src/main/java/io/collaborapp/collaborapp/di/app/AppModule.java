@@ -2,7 +2,9 @@ package io.collaborapp.collaborapp.di.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -44,6 +46,11 @@ public class AppModule {
     @Provides
     FirebaseAuth providesFirebaseAuth() {
         return FirebaseAuth.getInstance();
+    }
+
+    @Provides
+    SharedPreferences providesSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 }
 

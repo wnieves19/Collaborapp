@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,6 +26,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import dagger.android.AndroidInjection;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.chat.ChatListActivity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
@@ -33,7 +37,7 @@ import static dagger.internal.Preconditions.checkNotNull;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AuthenticationFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, AuthenticationContract.View, View.OnClickListener {
+public class AuthenticationFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, AuthenticationContract.View{
 
     private AuthenticationActionsListener onLoginMethodRequestListener;
 
@@ -51,16 +55,16 @@ public class AuthenticationFragment extends Fragment implements GoogleApiClient.
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login_options, container, false);
-
-        view.findViewById(R.id.sign_in_with_google).setOnClickListener(this);
-        view.findViewById(R.id.sign_up).setOnClickListener(this);
-        view.findViewById(R.id.login).setOnClickListener(this);
         ButterKnife.bind(this, view);
         ((BaseApplication) getActivity().getApplication()).createAuthenticationComponent().inject(this);
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -74,21 +78,19 @@ public class AuthenticationFragment extends Fragment implements GoogleApiClient.
         mAuthenticationPresenter.setView(this);
         return view;
     }
+    @OnClick(R.id.sign_in_with_google)
+    public void signInWithGoogle(Button button){
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.sign_in_with_google:
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-                break;
-            case R.id.sign_up:
-                onLoginMethodRequestListener.onSignUpOptionClicked();
-                break;
-            case R.id.login:
-                onLoginMethodRequestListener.onLoginOptionClicked();
-                break;
-        }
+    @OnClick(R.id.sign_up)
+    public void signUp(Button button){
+        onLoginMethodRequestListener.onSignUpOptionClicked();
+    }
+    @OnClick(R.id.login)
+    public void logIn(Button button){
+        onLoginMethodRequestListener.onLoginOptionClicked();
     }
 
     @Override

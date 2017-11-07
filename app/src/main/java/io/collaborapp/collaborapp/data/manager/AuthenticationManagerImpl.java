@@ -8,8 +8,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import javax.inject.Inject;
-
 import io.collaborapp.collaborapp.data.entities.UserEntity;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.reactivex.Observable;

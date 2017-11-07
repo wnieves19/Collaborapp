@@ -12,26 +12,25 @@ import io.collaborapp.collaborapp.di.authentication.AuthenticationModule;
 public class BaseApplication extends Application {
     private AppComponent mAppComponent;
     private AuthenticationComponent mAuthenticationComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
         mAppComponent = createAppComponent();
     }
 
-    private AppComponent createAppComponent()
-    {
+    private AppComponent createAppComponent() {
         return DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
     }
-    public AuthenticationComponent createAuthenticationComponent()
-    {
+
+    public AuthenticationComponent createAuthenticationComponent() {
         mAuthenticationComponent = mAppComponent.plus(new AuthenticationModule());
         return mAuthenticationComponent;
     }
 
-    public void releaseDetailsComponent()
-    {
+    public void releaseAuthenticationComponent() {
         mAuthenticationComponent = null;
     }
 }

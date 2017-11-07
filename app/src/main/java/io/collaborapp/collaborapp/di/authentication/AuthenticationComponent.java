@@ -23,6 +23,4 @@ public interface AuthenticationComponent {
 
     void inject(AuthenticationFragment target);
 
-
-
 }

@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.chat.ChatListActivity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
@@ -26,7 +28,7 @@ import static dagger.internal.Preconditions.checkNotNull;
  * Created by wilfredonieves on 10/17/17.
  */
 
-public class LoginFragment extends Fragment implements AuthenticationContract.View, View.OnClickListener {
+public class LoginFragment extends Fragment implements AuthenticationContract.View {
     @BindView(R.id.email)
     EditText mEmail;
     @BindView(R.id.password)
@@ -44,20 +46,13 @@ public class LoginFragment extends Fragment implements AuthenticationContract.Vi
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
         ((BaseApplication) getActivity().getApplication()).createAuthenticationComponent().inject(this);
-        view.findViewById(R.id.login).setOnClickListener(this);
         mAuthenticationPresenter.setView(this);
-
-
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.login:
-                mAuthenticationPresenter.logInWithEmailAndPassword(mEmail.getText().toString(), mPassword.getText().toString());
-                break;
-        }
+    @OnClick(R.id.login)
+    public void login(Button button){
+        mAuthenticationPresenter.logInWithEmailAndPassword(mEmail.getText().toString(), mPassword.getText().toString());
     }
 
     @Override

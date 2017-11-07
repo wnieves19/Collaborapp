@@ -70,6 +70,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
     @Override
     public void signUpWithEmailAndPassword(String email, String password, String passwordConfirmation) {
+        //TODO create user in database after authentication
         if (!validateFields(email, password, passwordConfirmation)) return;
         if (!password.equals(passwordConfirmation)) {
             mAuthenticationView.setErrorPasswordConfirm();

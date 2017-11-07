@@ -16,8 +16,6 @@ import io.collaborapp.collaborapp.di.authentication.AuthenticationModule;
 @Singleton
 @Component(modules = {
         AppModule.class})
-public interface AppComponent
-{
+public interface AppComponent {
     AuthenticationComponent plus(AuthenticationModule authenticationModule);
-
 }
