@@ -35,7 +35,6 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
     @BindView(R.id.indeterminateBar)
     ProgressBar mProgressBar;
 
-
     @Inject
     AuthenticationContract.Presenter mAuthenticationPresenter;
 
@@ -43,8 +42,8 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         ButterKnife.bind(this, view);
-        mAuthenticationPresenter.setView(this);
         ((BaseApplication) getActivity().getApplication()).createAuthenticationComponent().inject(this);
+        mAuthenticationPresenter.setView(this);
         return view;
     }
 

@@ -1,7 +1,5 @@
 package io.collaborapp.collaborapp.di.authentication;
 
-import android.support.v4.app.Fragment;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -10,7 +8,7 @@ import dagger.Provides;
 import io.collaborapp.collaborapp.authentication.AuthenticationContract;
 import io.collaborapp.collaborapp.authentication.AuthenticationPresenter;
 import io.collaborapp.collaborapp.data.manager.AuthenticationManager;
-import io.collaborapp.collaborapp.data.manager.AuthenticationManagerImpl;
+import io.collaborapp.collaborapp.data.manager.impl.AuthenticationManagerImpl;
 
 /**
  * Created by wilfredonieves on 10/27/17.

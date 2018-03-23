@@ -9,7 +9,7 @@ import io.collaborapp.collaborapp.data.entities.MessageEntity;
  */
 
 public interface ChatContract {
-    interface View extends BaseView<Presenter>{
+    interface View extends BaseView<Presenter> {
         void displayMessage(MessageEntity message);
 
         void removeMessage(MessageEntity message);
@@ -18,13 +18,16 @@ public interface ChatContract {
 
 
     }
-    interface Presenter extends BasePresenter {
-        void sendMessage();
 
-        void getMessages();
+    interface Presenter extends BasePresenter {
+        void sendMessage(String chatId);
+
+        void getMessages(String chatId);
 
         void getChats();
 
-        void deleteMessage();
+        void deleteMessages(String[] messageId);
+
+        void deleteChats();
     }
 }

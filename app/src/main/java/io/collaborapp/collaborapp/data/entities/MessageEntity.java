@@ -5,18 +5,19 @@ package io.collaborapp.collaborapp.data.entities;
  */
 
 public class MessageEntity {
-    private UserEntity sender;
+    private String messageId;
+    private String senderId;
     private String messageText;
     private long timeStamp;
     private String multimediaUrl;
+    private String type;
 
-
-    public UserEntity getSender() {
-        return sender;
+    public String getSender() {
+        return senderId;
     }
 
-    public void setSender(UserEntity sender) {
-        this.sender = sender;
+    public void setSender(String sender) {
+        this.senderId = sender;
     }
 
     public String getMessageText() {
@@ -41,5 +42,21 @@ public class MessageEntity {
 
     public void setMultimediaUrl(String multimediaUrl) {
         this.multimediaUrl = multimediaUrl;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }

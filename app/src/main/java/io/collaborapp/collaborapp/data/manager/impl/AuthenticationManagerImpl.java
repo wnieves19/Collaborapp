@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp.data.manager;
+package io.collaborapp.collaborapp.data.manager.impl;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import io.collaborapp.collaborapp.data.entities.UserEntity;
+import io.collaborapp.collaborapp.data.manager.AuthenticationManager;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.reactivex.Observable;
 
@@ -29,7 +30,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     public DatabaseReference getChildReference() {
-        if (this.childReference==null) {
+        if (this.childReference == null) {
             this.childReference = this.mFirebaseDatabase.
                     getReference()
                     .child("users")
@@ -56,7 +57,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     @Override
-    public Observable<Object> createNewUser(String userId, String email ) {
+    public Observable<Object> createNewUser(String userId, String email) {
         UserEntity userEntity = new UserEntity(userId, email);
         return RxFirebase.getObservable(getChildReference().setValue(userEntity), new RxFirebase.FirebaseTaskResponseSuccess());
 
