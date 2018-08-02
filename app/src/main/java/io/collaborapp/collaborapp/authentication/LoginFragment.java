@@ -36,7 +36,6 @@ public class LoginFragment extends Fragment implements AuthenticationContract.Vi
     @BindView(R.id.indeterminateBar)
     ProgressBar mProgressBar;
 
-
     @Inject
     AuthenticationContract.Presenter mAuthenticationPresenter;
 
