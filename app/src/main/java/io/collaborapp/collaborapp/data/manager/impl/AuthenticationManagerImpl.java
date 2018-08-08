@@ -4,6 +4,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -12,6 +13,8 @@ import io.collaborapp.collaborapp.data.entities.UserEntity;
 import io.collaborapp.collaborapp.data.manager.AuthenticationManager;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Created by wilfredonieves on 10/30/17.
@@ -23,8 +26,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     private FirebaseDatabase mFirebaseDatabase;
 
 
-    public AuthenticationManagerImpl(FirebaseAuth firebaseAuth,
-                                     FirebaseDatabase firebaseDatabase) {
+    public AuthenticationManagerImpl(FirebaseAuth firebaseAuth, FirebaseDatabase firebaseDatabase) {
         this.mAuth = firebaseAuth;
         this.mFirebaseDatabase = firebaseDatabase;
     }
@@ -62,6 +64,22 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         return RxFirebase.getObservable(getChildReference().setValue(userEntity), new RxFirebase.FirebaseTaskResponseSuccess());
 
     }
+
+    @Override
+    public Observable<FirebaseUser> getAuthUser() {
+        return Observable.create(new ObservableOnSubscribe<FirebaseUser>() {
+
+            @Override
+            public void subscribe(ObservableEmitter<FirebaseUser> emitter) throws Exception {
+                if (mAuth.getCurrentUser() != null) {
+                    if (!emitter.isDisposed()) {
+                        emitter.onNext(mAuth.getCurrentUser());
+                    }
+                }
+            }
+        });
+    }
+
 
     @Override
     public void signOut() {
