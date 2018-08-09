@@ -50,6 +50,7 @@ dependencies {
 
     compile 'com.google.dagger:dagger-android-support:2.11'
 
+    implementation 'org.webrtc:google-webrtc:1.0.22672'
 
     compileOnly 'javax.annotation:jsr250-api:1.0'
     //Firebase SDK
@@ -57,5 +58,10 @@ dependencies {
     compile 'com.google.firebase:firebase-database:16.0.1'
 
     testCompile 'junit:junit:4.12'
+}
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
 }
 apply plugin: 'com.google.gms.google-services'
