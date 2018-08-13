@@ -23,6 +23,8 @@ import io.reactivex.schedulers.Schedulers;
 public class AuthenticationPresenter implements AuthenticationContract.Presenter {
     private AuthenticationContract.View mAuthenticationView;
 
+    private AuthenticationContract.LogOutView mLogoutView;
+
     private AuthenticationManager mAuthManager;
 
     private final static int MIN_CHARS_PASSWORD = 5;
@@ -36,7 +38,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
     }
 
     private void onAuthUser(FirebaseUser user) {
-        if(user!=null) {
+        if(user!=null && mAuthenticationView!=null) {
             mAuthenticationView.navigateToHome();
         }
     }
@@ -90,7 +92,22 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onTaskSuccess, this::onLoginFailed);
+    }
 
+    @Override
+    public void setView(AuthenticationContract.View view) {
+        this.mAuthenticationView = view;
+    }
+
+    @Override
+    public void setLogoutView(AuthenticationContract.LogOutView view) {
+        this.mLogoutView = view;
+    }
+
+    @Override
+    public void signOut() {
+        mAuthManager.signOut();
+        mLogoutView.navigateToAuthFragment();
     }
 
     private boolean validateFields(String email, String password, @Nullable String passwordConfirm) {
@@ -107,11 +124,6 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
             mAuthenticationView.setErrorPasswordConfirm();
         }
         return validate;
-    }
-
-    @Override
-    public void setView(AuthenticationContract.View view) {
-        this.mAuthenticationView = view;
     }
 
     private void onTaskSuccess(AuthResult authResult) {
@@ -146,13 +158,4 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
         }
     }
 
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
-    }
 }

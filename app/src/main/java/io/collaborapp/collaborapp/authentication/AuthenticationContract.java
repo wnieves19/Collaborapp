@@ -2,16 +2,13 @@ package io.collaborapp.collaborapp.authentication;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import io.collaborapp.collaborapp.BasePresenter;
-import io.collaborapp.collaborapp.BaseView;
-
 /**
  * Created by wilfredonieves on 4/28/17.
  */
 
 public interface AuthenticationContract {
 
-    interface View extends BaseView<Presenter> {
+    interface View {
         void showProgress();
 
         void hideProgress();
@@ -24,12 +21,14 @@ public interface AuthenticationContract {
 
         void setErrorPasswordConfirm();
 
-        void setPresenter(AuthenticationContract.Presenter presenter);
-
         void navigateToHome();
     }
 
-    interface Presenter extends BasePresenter {
+    interface LogOutView {
+        void navigateToAuthFragment();
+    }
+
+    interface Presenter {
 
         void logInWithGoogle(GoogleSignInAccount account);
 
@@ -38,6 +37,10 @@ public interface AuthenticationContract {
         void signUpWithEmailAndPassword(String email, String password, String passwordConfirmation);
 
         void setView(AuthenticationContract.View view);
+
+        void setLogoutView(AuthenticationContract.LogOutView view);
+
+        void signOut();
 
     }
 }

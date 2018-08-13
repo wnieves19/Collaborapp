@@ -1,5 +1,6 @@
 package io.collaborapp.collaborapp.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -7,11 +8,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+
+import javax.inject.Inject;
 
 import io.collaborapp.collaborapp.R;
+import io.collaborapp.collaborapp.authentication.AuthenticationActivity;
+import io.collaborapp.collaborapp.authentication.AuthenticationContract;
+import io.collaborapp.collaborapp.di.app.BaseApplication;
 
-public class ChatListActivity extends AppCompatActivity {
+public class ChatListActivity extends AppCompatActivity  implements AuthenticationContract.LogOutView{
+    @Inject
+    AuthenticationContract.Presenter mAuthenticationPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +26,11 @@ public class ChatListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ((BaseApplication) getApplication()).createAuthenticationComponent().inject(this);
+        mAuthenticationPresenter.setLogoutView(this);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
         });
     }
 
@@ -40,9 +45,17 @@ public class ChatListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.sign_out:{
-                //TODO: Sign out
+                mAuthenticationPresenter.signOut();
             }
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void navigateToAuthFragment() {
+        Intent intent = new Intent(ChatListActivity.this, AuthenticationActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 }

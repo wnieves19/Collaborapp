@@ -35,14 +35,4 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     }
 
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unsubscribe() {
-
-    }
-
 }

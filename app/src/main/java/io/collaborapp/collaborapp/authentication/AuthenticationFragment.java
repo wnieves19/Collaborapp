@@ -123,20 +123,17 @@ public class AuthenticationFragment extends Fragment implements GoogleApiClient.
     public void onPause() {
         super.onPause();
         disconnectApiClient();
-        mAuthenticationPresenter.unsubscribe();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         disconnectApiClient();
-        mAuthenticationPresenter.unsubscribe();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAuthenticationPresenter.subscribe();
     }
 
     @Override
@@ -173,12 +170,6 @@ public class AuthenticationFragment extends Fragment implements GoogleApiClient.
     @Override
     public void setErrorPasswordConfirm() {
         //Ignored intentionally
-    }
-
-    @Override
-    public void setPresenter(AuthenticationContract.Presenter presenter) {
-        mAuthenticationPresenter = checkNotNull(presenter, "Presenter cannot be null");
-
     }
 
     @Override

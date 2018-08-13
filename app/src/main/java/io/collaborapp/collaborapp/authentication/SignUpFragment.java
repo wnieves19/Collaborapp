@@ -90,11 +90,6 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
     }
 
     @Override
-    public void setPresenter(AuthenticationContract.Presenter presenter) {
-        mAuthenticationPresenter = checkNotNull(presenter, "Presenter cannot be null");
-    }
-
-    @Override
     public void navigateToHome() {
         Intent intent = new Intent(getActivity(), ChatListActivity.class);
         startActivity(intent);

@@ -16,6 +16,5 @@ public interface AuthenticationManager {
     Observable<AuthResult> signUpWithEmail(String email, String password);
     Observable<Object> createNewUser(String email, String userId);
     Observable<FirebaseUser> getAuthUser();
-
     void signOut();
 }

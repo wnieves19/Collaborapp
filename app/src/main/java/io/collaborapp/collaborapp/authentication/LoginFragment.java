@@ -57,19 +57,16 @@ public class LoginFragment extends Fragment implements AuthenticationContract.Vi
     @Override
     public void onPause() {
         super.onPause();
-        mAuthenticationPresenter.unsubscribe();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mAuthenticationPresenter.unsubscribe();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAuthenticationPresenter.subscribe();
     }
 
     @Override
@@ -106,11 +103,6 @@ public class LoginFragment extends Fragment implements AuthenticationContract.Vi
     @Override
     public void setErrorPasswordConfirm() {
         //Ignored intentionally
-    }
-
-    @Override
-    public void setPresenter(AuthenticationContract.Presenter presenter) {
-        mAuthenticationPresenter = checkNotNull(presenter, "Presenter cannot be null");
     }
 
     @Override
