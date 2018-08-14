@@ -2,6 +2,8 @@ package io.collaborapp.collaborapp.authentication;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import io.collaborapp.collaborapp.BasePresenter;
+
 /**
  * Created by wilfredonieves on 4/28/17.
  */

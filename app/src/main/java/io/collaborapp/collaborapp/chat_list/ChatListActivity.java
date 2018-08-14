@@ -1,8 +1,7 @@
-package io.collaborapp.collaborapp.chat;
+package io.collaborapp.collaborapp.chat_list;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,10 +27,6 @@ public class ChatListActivity extends AppCompatActivity  implements Authenticati
         setSupportActionBar(toolbar);
         ((BaseApplication) getApplication()).createAuthenticationComponent().inject(this);
         mAuthenticationPresenter.setLogoutView(this);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-
-        });
     }
 
     @Override

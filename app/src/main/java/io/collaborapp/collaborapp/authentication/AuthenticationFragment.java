@@ -28,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.collaborapp.collaborapp.R;
-import io.collaborapp.collaborapp.chat.ChatListActivity;
+import io.collaborapp.collaborapp.chat_list.ChatListActivity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
 
 import static dagger.internal.Preconditions.checkNotNull;

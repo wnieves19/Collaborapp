@@ -1,13 +1,21 @@
 package io.collaborapp.collaborapp.chat;
 
+import javax.inject.Inject;
+
+import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.data.DataManager;
+import io.collaborapp.collaborapp.data.db.ChatDbHelper;
+
 /**
  * Created by wilfredonieves on 11/7/17.
  */
 
-public class ChatPresenter implements ChatContract.Presenter {
+public class ChatPresenter extends BasePresenter implements ChatContract.Presenter {
 
-    public ChatPresenter() {
-
+    ChatContract.View mChatView;
+    @Inject
+    public ChatPresenter(DataManager dataManager) {
+        super(dataManager);
     }
 
     @Override
@@ -21,11 +29,6 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void getChats() {
-
-    }
-
-    @Override
     public void deleteMessages(String[] messageId) {
 
     }
@@ -33,6 +36,11 @@ public class ChatPresenter implements ChatContract.Presenter {
     @Override
     public void deleteChats() {
 
+    }
+
+    @Override
+    public void setView(ChatContract.View view) {
+        mChatView = view;
     }
 
 }

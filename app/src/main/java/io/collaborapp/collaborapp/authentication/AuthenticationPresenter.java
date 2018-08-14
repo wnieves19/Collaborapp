@@ -7,7 +7,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
-import io.collaborapp.collaborapp.data.manager.AuthenticationManager;
+import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.data.DataManager;
+import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.collaborapp.collaborapp.rx.DefaultObserver;
 import io.reactivex.Observable;
@@ -20,19 +22,18 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by wilfredonieves on 10/16/17.
  */
-public class AuthenticationPresenter implements AuthenticationContract.Presenter {
+public class AuthenticationPresenter extends BasePresenter implements AuthenticationContract.Presenter {
     private AuthenticationContract.View mAuthenticationView;
 
     private AuthenticationContract.LogOutView mLogoutView;
 
-    private AuthenticationManager mAuthManager;
 
     private final static int MIN_CHARS_PASSWORD = 5;
 
     @Inject
-    public AuthenticationPresenter(AuthenticationManager authManager) {
-        this.mAuthManager = authManager;
-        mAuthManager.getAuthUser().subscribeOn(Schedulers.io())
+    public AuthenticationPresenter(DataManager dataManager) {
+        super(dataManager);
+        getDataManager().getAuthUser().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onAuthUser);
     }
@@ -46,11 +47,11 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
     @Override
     public void logInWithGoogle(GoogleSignInAccount account) {
         mAuthenticationView.showProgress();
-        mAuthManager.signInWithGoogle(account).map(new Function<AuthResult, Object>() {
+        getDataManager().signInWithGoogle(account).map(new Function<AuthResult, Object>() {
             @Override
             public Object apply(AuthResult authResult) throws Exception {
                 if (authResult.getUser() != null) {
-                    Observable<?> observable = mAuthManager.createNewUser(authResult.getUser().getUid(), authResult.getUser().getEmail())
+                    Observable<?> observable = getDataManager().createNewUser(authResult.getUser().getUid(), authResult.getUser().getEmail())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread());
                     DisposableObserver observer = new WriteUserObserver();
@@ -67,12 +68,11 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
     }
 
-
     @Override
     public void logInWithEmailAndPassword(String email, String password) {
         if (!validateFields(email, password, null)) return;
         mAuthenticationView.showProgress();
-        mAuthManager.signInWithEmail(email, password)
+        getDataManager().signInWithEmail(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onTaskSuccess, this::onLoginFailed);
@@ -88,7 +88,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
             return;
         }
         mAuthenticationView.showProgress();
-        mAuthManager.signUpWithEmail(email, password)
+        getDataManager().signUpWithEmail(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onTaskSuccess, this::onLoginFailed);
@@ -106,7 +106,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
     @Override
     public void signOut() {
-        mAuthManager.signOut();
+        getDataManager().signOut();
         mLogoutView.navigateToAuthFragment();
     }
 

@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp.data.manager.impl;
+package io.collaborapp.collaborapp.data.db.impl;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
@@ -9,8 +9,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import io.collaborapp.collaborapp.data.entities.UserEntity;
-import io.collaborapp.collaborapp.data.manager.AuthenticationManager;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
+import io.collaborapp.collaborapp.data.model.UserEntity;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -19,14 +22,14 @@ import io.reactivex.ObservableOnSubscribe;
 /**
  * Created by wilfredonieves on 10/30/17.
  */
-
-public class AuthenticationManagerImpl implements AuthenticationManager {
+@Singleton
+public class AuthenticationDbHelperImpl implements AuthenticationDbHelper {
     private FirebaseAuth mAuth;
     private DatabaseReference childReference = null;
     private FirebaseDatabase mFirebaseDatabase;
 
-
-    public AuthenticationManagerImpl(FirebaseAuth firebaseAuth, FirebaseDatabase firebaseDatabase) {
+    @Inject
+    public AuthenticationDbHelperImpl(FirebaseAuth firebaseAuth, FirebaseDatabase firebaseDatabase) {
         this.mAuth = firebaseAuth;
         this.mFirebaseDatabase = firebaseDatabase;
     }
@@ -67,14 +70,10 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
     @Override
     public Observable<FirebaseUser> getAuthUser() {
-        return Observable.create(new ObservableOnSubscribe<FirebaseUser>() {
-
-            @Override
-            public void subscribe(ObservableEmitter<FirebaseUser> emitter) throws Exception {
-                if (mAuth.getCurrentUser() != null) {
-                    if (!emitter.isDisposed()) {
-                        emitter.onNext(mAuth.getCurrentUser());
-                    }
+        return Observable.create(emitter -> {
+            if (mAuth.getCurrentUser() != null) {
+                if (!emitter.isDisposed()) {
+                    emitter.onNext(mAuth.getCurrentUser());
                 }
             }
         });

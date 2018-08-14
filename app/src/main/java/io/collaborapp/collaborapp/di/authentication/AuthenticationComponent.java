@@ -4,12 +4,12 @@ import dagger.Subcomponent;
 import io.collaborapp.collaborapp.authentication.AuthenticationFragment;
 import io.collaborapp.collaborapp.authentication.LoginFragment;
 import io.collaborapp.collaborapp.authentication.SignUpFragment;
-import io.collaborapp.collaborapp.chat.ChatListActivity;
+import io.collaborapp.collaborapp.chat_list.ChatListActivity;
 
 /**
  * Created by wilfredonieves on 10/27/17.
  */
-@AuthenticationScope
+@AppScope
 @Subcomponent(modules = {AuthenticationModule.class})
 public interface AuthenticationComponent {
 

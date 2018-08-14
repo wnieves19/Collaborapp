@@ -1,4 +1,4 @@
-package io.collaborapp.collaborapp.data.entities;
+package io.collaborapp.collaborapp.data.model;
 
 /**
  * Created by wilfredonieves on 11/3/17.

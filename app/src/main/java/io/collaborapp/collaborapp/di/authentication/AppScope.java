@@ -11,6 +11,6 @@ import javax.inject.Scope;
 
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AuthenticationScope
+public @interface AppScope
 {
 }

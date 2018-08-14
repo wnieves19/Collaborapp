@@ -1,6 +1,5 @@
 package io.collaborapp.collaborapp.authentication;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.collaborapp.collaborapp.R;
-import io.collaborapp.collaborapp.chat.ChatListActivity;
+import io.collaborapp.collaborapp.chat_list.ChatListActivity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
 
 import static dagger.internal.Preconditions.checkNotNull;

@@ -13,6 +13,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.collaborapp.collaborapp.data.AppDataManager;
+import io.collaborapp.collaborapp.data.DataManager;
+import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
+import io.collaborapp.collaborapp.data.db.ChatDbHelper;
+import io.collaborapp.collaborapp.data.db.impl.AuthenticationDbHelperImpl;
+import io.collaborapp.collaborapp.data.db.impl.ChatDbHelperImpl;
 
 /**
  * Created by wilfredonieves on 10/27/17.
@@ -51,6 +57,23 @@ public class AppModule {
     @Provides
     SharedPreferences providesSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+    @Provides
+    @Singleton
+    AuthenticationDbHelper provideAuthDbHelper(AuthenticationDbHelperImpl authDbHelper) {
+        return authDbHelper;
+    }
+
+    @Provides
+    @Singleton
+    ChatDbHelper provideChatDbHelper(ChatDbHelperImpl chatDbHelper) {
+        return chatDbHelper;
+    }
+
+    @Provides
+    @Singleton
+    DataManager provideDataManager(AppDataManager appDataManager){
+        return appDataManager;
     }
 }
 
