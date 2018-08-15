@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.authentication.AuthenticationActivity;
 import io.collaborapp.collaborapp.authentication.AuthenticationContract;

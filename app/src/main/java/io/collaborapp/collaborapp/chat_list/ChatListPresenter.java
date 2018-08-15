@@ -1,11 +1,15 @@
 package io.collaborapp.collaborapp.chat_list;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import io.collaborapp.collaborapp.BasePresenter;
 import io.collaborapp.collaborapp.data.DataManager;
-import io.collaborapp.collaborapp.data.db.ChatDbHelper;
+import io.collaborapp.collaborapp.data.model.ChatEntity;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ChatListPresenter extends BasePresenter implements ChatListContract.Presenter {
     private ChatListContract.View mChatListView;
@@ -16,7 +20,24 @@ public class ChatListPresenter extends BasePresenter implements ChatListContract
     }
 
     @Override
+    public void onViewInitialized() {
+        getDataManager().fetchChatList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(chatEntity -> {
+                    mChatListView.updateChatList();
+                });
+    }
+
+    @Override
     public void deleteChats(String[] chatIds) {
+        getDataManager().deleteChat(chatIds)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(chatDeleted -> {
+                    if (chatDeleted)
+                        mChatListView.updateChatList();
+                });
 
     }
 
@@ -28,5 +49,10 @@ public class ChatListPresenter extends BasePresenter implements ChatListContract
     @Override
     public void setView(ChatListContract.View view) {
         mChatListView = view;
+    }
+
+    @Override
+    public List<ChatEntity> getChatList() {
+        return getDataManager().getChatList();
     }
 }

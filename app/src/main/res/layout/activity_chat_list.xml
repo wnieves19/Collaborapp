@@ -20,8 +20,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <fragment android:name="io.collaborapp.collaborapp.chat_list.ChatListFragment"
-        android:id="@+id/chat_list"
+    <fragment class="io.collaborapp.collaborapp.chat_list.ChatListFragment"
+        android:id="@+id/chat_list_fragment_holder"
+        android:layout_marginTop="55dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

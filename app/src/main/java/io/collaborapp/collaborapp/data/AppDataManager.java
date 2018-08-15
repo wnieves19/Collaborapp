@@ -6,12 +6,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
 import io.collaborapp.collaborapp.data.db.ChatDbHelper;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public class AppDataManager implements DataManager {
@@ -23,7 +26,6 @@ public class AppDataManager implements DataManager {
         this.mChatDbHelper = mDbHelper;
         this.mAuthDbHelper = mAuthDbHelper;
     }
-
 
     @Override
     public Observable signInWithGoogle(GoogleSignInAccount account) {
@@ -61,8 +63,18 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable deleteChat(String[] chatId) {
+    public Observable<Boolean> deleteChat(String[] chatId) {
         return mChatDbHelper.deleteChat(chatId);
+    }
+
+    @Override
+    public Flowable<ChatEntity> fetchChatList() {
+        return mChatDbHelper.fetchChatList();
+    }
+
+    @Override
+    public List<ChatEntity> getChatList() {
+        return mChatDbHelper.getChatList();
     }
 
     @Override
