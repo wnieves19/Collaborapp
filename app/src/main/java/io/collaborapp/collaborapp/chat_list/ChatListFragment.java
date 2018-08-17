@@ -56,6 +56,9 @@ public class ChatListFragment extends Fragment implements ChatListContract.View 
     @Override
     public void updateChatList() {
         mAdapter.notifyDataSetChanged();
+        List<String> userIds = new ArrayList<>();
+        userIds.add("523f234f234sd");
+        mChatListPresenter.createChat(userIds, null);
     }
 
     @Override

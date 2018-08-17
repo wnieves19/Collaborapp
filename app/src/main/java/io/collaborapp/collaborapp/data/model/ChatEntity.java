@@ -9,12 +9,11 @@ import java.util.List;
 public class ChatEntity {
 
     private String chatId;
-    public String title = "";
+    private String title = "";
     private List<MessageEntity> messageList;
-    public MessageEntity lastMessage;
+    private MessageEntity lastMessage;
     private List<String> members;
     private long createdAt;
-    private String type;
 
     public ChatEntity() {
 
@@ -73,11 +72,4 @@ public class ChatEntity {
         this.createdAt = createdAt;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

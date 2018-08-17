@@ -1,20 +1,15 @@
 package io.collaborapp.collaborapp.chat_list;
 
-import android.util.Log;
-
 import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import io.collaborapp.collaborapp.BasePresenter;
-import io.collaborapp.collaborapp.authentication.AuthenticationPresenter;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class ChatListPresenter extends BasePresenter implements ChatListContract.Presenter {

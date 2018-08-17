@@ -30,33 +30,28 @@ public class RxFirebase {
 
     @NonNull
     public static <T> Observable<T> getObservableForSingleEvent(@NonNull final Query query, @NonNull final Class<T> clazz) {
-        return Observable.create(new ObservableOnSubscribe<T>() {
+        return Observable.create(emitter -> query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void subscribe(final ObservableEmitter<T> emitter) throws Exception {
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(TAG, dataSnapshot.toString());
-                        T value = dataSnapshot.getValue(clazz);
-                        if (value != null) {
-                            if (!emitter.isDisposed()) {
-                                emitter.onNext(value);
-                            }
-                        } else {
-                            if (!emitter.isDisposed()) {
-                                emitter.onError(new FirebaseRxDataCastException("Unable to cast Firebase data response to " + clazz.getSimpleName()));
-                            }
-                        }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, dataSnapshot.toString());
+                T value = dataSnapshot.getValue(clazz);
+                if (value != null) {
+                    if (!emitter.isDisposed()) {
+                        emitter.onNext(value);
                     }
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        if (!emitter.isDisposed()) {
-                            emitter.onError(new FirebaseRxDataException(error));
-                        }
+                } else {
+                    if (!emitter.isDisposed()) {
+                        emitter.onError(new FirebaseRxDataCastException("Unable to cast Firebase data response to " + clazz.getSimpleName()));
                     }
-                });
+                }
             }
-        });
+            @Override
+            public void onCancelled(DatabaseError error) {
+                if (!emitter.isDisposed()) {
+                    emitter.onError(new FirebaseRxDataException(error));
+                }
+            }
+        }));
     }
 
     @NonNull
@@ -94,26 +89,15 @@ public class RxFirebase {
 
     @NonNull
     public static <T> Observable<T> getObservable(@NonNull final Task<T> task) {
-        return Observable.create(new ObservableOnSubscribe<T>() {
-            @Override
-            public void subscribe(final ObservableEmitter<T> emitter) throws Exception {
-                task.addOnSuccessListener(new OnSuccessListener<T>() {
-                    @Override
-                    public void onSuccess(T result) {
-                        if (!emitter.isDisposed()) {
-                            emitter.onNext(result);
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        if (!emitter.isDisposed()) {
-                            emitter.onError(e);
-                        }
-                    }
-                });
+        return Observable.create(emitter -> task.addOnSuccessListener(result -> {
+            if (!emitter.isDisposed()) {
+                emitter.onNext(result);
             }
-        });
+        }).addOnFailureListener(e -> {
+            if (!emitter.isDisposed()) {
+                emitter.onError(e);
+            }
+        }));
     }
 
     /**
@@ -126,31 +110,20 @@ public class RxFirebase {
     @NonNull
     public static <T> Observable<Object> getObservable(@NonNull final Task<T> task,
                                                        @NonNull final Object objectToReturn) {
-        return Observable.create(new ObservableOnSubscribe<Object>() {
-            @Override
-            public void subscribe(final ObservableEmitter<Object> emitter) throws Exception {
-                task.addOnSuccessListener(new OnSuccessListener<Object>() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        if (!emitter.isDisposed()) {
-                            if ((result instanceof Void
-                                    || result == null)
-                                    && objectToReturn != null) {
-                                emitter.onNext(objectToReturn);
-                            } else {
-                                emitter.onNext(result);
-                            }
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        if (!emitter.isDisposed()) {
-                            emitter.onError(e);
-                        }
-                    }
-                });
+        return Observable.create(emitter -> task.addOnSuccessListener((OnSuccessListener<Object>) result -> {
+            if (!emitter.isDisposed()) {
+                if ((result instanceof Void
+                        || result == null)
+                        && objectToReturn != null) {
+                    emitter.onNext(objectToReturn);
+                } else {
+                    emitter.onNext(result);
+                }
             }
-        });
+        }).addOnFailureListener(e -> {
+            if (!emitter.isDisposed()) {
+                emitter.onError(e);
+            }
+        }));
     }
 }

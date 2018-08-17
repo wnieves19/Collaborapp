@@ -3,15 +3,14 @@ package io.collaborapp.collaborapp.data.db.impl;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,7 +43,6 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         ChatEntity chat = dataSnapshot.getValue(ChatEntity.class);
-                        chat.setChatId(dataSnapshot.getKey());
                         addChatToList(chat);
                         e.onNext(chat);
                         e.onComplete();
@@ -85,24 +83,55 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     }
 
     @Override
-    public Observable<Object> createChat(List<String> userId, @Nullable String groupName) {
-        //TODO: If only 1 userId is provided, check there aren't any chat with the user (Unique chats)
-        //TODO: Create chat to userId and currentUser;
+    public Observable<Object> createChat(List<String> userIds, @Nullable String groupName) {
+        userIds.add(mAuth.getCurrentUser().getUid());
+
+        ChatEntity existingChat = getExistingChat(userIds);
+        if (existingChat != null) return Observable.create(emitter -> emitter.onNext(existingChat));
+
         String chatKey = mFirebaseDatabase.getReference()
                 .child("user-chats")
                 .child(mAuth.getCurrentUser().getUid())
                 .push().getKey();
 
         ChatEntity newChat = new ChatEntity(chatKey);
-        newChat.setType("im");
-        userId.add(mAuth.getCurrentUser().getUid());
-        newChat.setMembers(userId);
+        newChat.setMembers(userIds);
 
-        return RxFirebase.getObservable(mFirebaseDatabase.getReference()
+        for (String userId : userIds) {
+            if (!mAuth.getCurrentUser().getUid().equals(userId)) {
+                createChatToUser(newChat, userId);
+            } else {
+                return RxFirebase.getObservable(createChatToUser(newChat, userId), newChat);
+            }
+        }
+
+        return null;
+    }
+
+    private ChatEntity getExistingChat(List<String> userIds) {
+        for (ChatEntity chat : getChatList()) {
+            int counter = 0;
+            for (String userId : chat.getMembers()) {
+                for (String id : userIds) {
+                    if (id.equals(userId)) {
+                        counter++;
+                    }
+                }
+            }
+            if (counter == 2) {
+                return chat;
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    private Task<Void> createChatToUser(ChatEntity newChat, String userId) {
+        return mFirebaseDatabase.getReference()
                 .child("user-chats")
-                .child(mAuth.getCurrentUser().getUid())
-                .child(chatKey)
-                .setValue(newChat), newChat);
+                .child(userId)
+                .child(newChat.getChatId())
+                .setValue(newChat);
     }
 
     @Override
