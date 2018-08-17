@@ -58,7 +58,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<ChatEntity> createChat(String[] userId, @Nullable String groupName) {
+    public Observable createChat(List<String> userId, @Nullable String groupName) {
         return mChatDbHelper.createChat(userId, groupName);
     }
 

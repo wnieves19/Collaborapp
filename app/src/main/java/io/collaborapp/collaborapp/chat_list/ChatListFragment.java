@@ -10,12 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
+import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
 
 public class ChatListFragment extends Fragment implements ChatListContract.View {
@@ -51,6 +56,13 @@ public class ChatListFragment extends Fragment implements ChatListContract.View 
     @Override
     public void updateChatList() {
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void openChatView(ChatEntity chat) {
+//        updateChatList();
+        Toast.makeText(getActivity(), "The chat created was " + chat.getChatId(), Toast.LENGTH_SHORT).show();
+        //TODO: Open ChatView
     }
 
     public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder> {

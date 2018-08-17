@@ -11,16 +11,22 @@ public interface ChatListContract {
     interface View {
 
         void updateChatList();
+
+        void openChatView(ChatEntity chat);
     }
 
     interface Presenter {
         void deleteChats(String[] chatIds);
 
-        void createChat(String[] userId, @Nullable String groupName);
+        void createChat(List<String> userId, @Nullable String groupName);
 
         void setView(ChatListContract.View view);
 
         void onViewInitialized();
+
+        void muteChat(String chatId);
+
+        void unmuteChat(String chatId);
 
         List<ChatEntity> getChatList();
     }

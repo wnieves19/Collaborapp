@@ -1,14 +1,20 @@
 package io.collaborapp.collaborapp.chat_list;
 
+import android.util.Log;
+
 import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.authentication.AuthenticationPresenter;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class ChatListPresenter extends BasePresenter implements ChatListContract.Presenter {
@@ -30,6 +36,17 @@ public class ChatListPresenter extends BasePresenter implements ChatListContract
     }
 
     @Override
+    public void createChat(List<String> userId, @Nullable String groupName) {
+        Observable<?> observable = getDataManager().createChat(userId, groupName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        observable.subscribe(newChat -> {
+            if (newChat == null) return;
+            mChatListView.openChatView((ChatEntity) newChat);
+        });
+    }
+
+    @Override
     public void deleteChats(String[] chatIds) {
         getDataManager().deleteChat(chatIds)
                 .subscribeOn(Schedulers.io())
@@ -42,7 +59,12 @@ public class ChatListPresenter extends BasePresenter implements ChatListContract
     }
 
     @Override
-    public void createChat(String[] userId, @Nullable String groupName) {
+    public void muteChat(String chatId) {
+
+    }
+
+    @Override
+    public void unmuteChat(String chatId) {
 
     }
 

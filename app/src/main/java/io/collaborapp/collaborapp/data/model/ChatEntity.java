@@ -9,11 +9,20 @@ import java.util.List;
 public class ChatEntity {
 
     private String chatId;
-    public String title;
+    public String title = "";
     private List<MessageEntity> messageList;
     public MessageEntity lastMessage;
-    private List<UserEntity> members;
+    private List<String> members;
     private long createdAt;
+    private String type;
+
+    public ChatEntity() {
+
+    }
+
+    public ChatEntity(String chatId) {
+        this.chatId = chatId;
+    }
 
     public String getChatId() {
         return chatId;
@@ -27,7 +36,7 @@ public class ChatEntity {
         return messageList;
     }
 
-    public List<UserEntity> getMembers() {
+    public List<String> getMembers() {
         return members;
     }
 
@@ -56,11 +65,19 @@ public class ChatEntity {
         this.lastMessage = lastMessage;
     }
 
-    public void setMembers(List<UserEntity> members) {
+    public void setMembers(List<String> members) {
         this.members = members;
     }
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

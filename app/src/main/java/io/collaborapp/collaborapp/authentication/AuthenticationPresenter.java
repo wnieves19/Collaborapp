@@ -47,20 +47,17 @@ public class AuthenticationPresenter extends BasePresenter implements Authentica
     @Override
     public void logInWithGoogle(GoogleSignInAccount account) {
         mAuthenticationView.showProgress();
-        getDataManager().signInWithGoogle(account).map(new Function<AuthResult, Object>() {
-            @Override
-            public Object apply(AuthResult authResult) throws Exception {
-                if (authResult.getUser() != null) {
-                    Observable<?> observable = getDataManager().createNewUser(authResult.getUser().getUid(), authResult.getUser().getEmail())
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread());
-                    DisposableObserver observer = new WriteUserObserver();
-                    observable.subscribeWith(observer);
-                } else {
-                    mAuthenticationView.showError("Google authentication failed");
-                }
-                return authResult;
+        getDataManager().signInWithGoogle(account).map((Function<AuthResult, Object>) authResult -> {
+            if (authResult.getUser() != null) {
+                Observable<?> observable = getDataManager().createNewUser(authResult.getUser().getUid(), authResult.getUser().getEmail())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread());
+                DisposableObserver observer = new WriteUserObserver();
+                observable.subscribeWith(observer);
+            } else {
+                mAuthenticationView.showError("Google authentication failed");
             }
+            return authResult;
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

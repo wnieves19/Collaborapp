@@ -11,7 +11,7 @@ import io.reactivex.Observable;
 
 public interface ChatDbHelper {
 
-    Observable<ChatEntity> createChat(String[] userId, @Nullable String groupName);
+    Observable<Object> createChat(List<String> userId, @Nullable String groupName);
 
     Observable<Boolean> deleteChat(String[] chatId);
 

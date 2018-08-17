@@ -9,7 +9,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,6 +20,7 @@ import javax.inject.Singleton;
 import io.collaborapp.collaborapp.data.db.ChatDbHelper;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
+import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
@@ -82,10 +85,24 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     }
 
     @Override
-    public Observable<ChatEntity> createChat(String[] userId, @Nullable String groupName) {
-        //TODO: If only 1 userId is provided, check there aren't any chat with the user
+    public Observable<Object> createChat(List<String> userId, @Nullable String groupName) {
+        //TODO: If only 1 userId is provided, check there aren't any chat with the user (Unique chats)
         //TODO: Create chat to userId and currentUser;
-        return null;
+        String chatKey = mFirebaseDatabase.getReference()
+                .child("user-chats")
+                .child(mAuth.getCurrentUser().getUid())
+                .push().getKey();
+
+        ChatEntity newChat = new ChatEntity(chatKey);
+        newChat.setType("im");
+        userId.add(mAuth.getCurrentUser().getUid());
+        newChat.setMembers(userId);
+
+        return RxFirebase.getObservable(mFirebaseDatabase.getReference()
+                .child("user-chats")
+                .child(mAuth.getCurrentUser().getUid())
+                .child(chatKey)
+                .setValue(newChat), newChat);
     }
 
     @Override
