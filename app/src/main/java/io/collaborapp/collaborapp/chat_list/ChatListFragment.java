@@ -79,7 +79,7 @@ public class ChatListFragment extends Fragment implements ChatListContract.View 
 
         @Override
         public void onBindViewHolder(@NonNull ChatListViewHolder holder, int position) {
-            holder.mTextView.setText(mChatListPresenter.getChatList().get(position).getTitle());
+            holder.mTextView.setText(mChatListPresenter.getChatList().get(position).getLastMessage().getText());
         }
 
         @Override

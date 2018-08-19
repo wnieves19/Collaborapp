@@ -9,6 +9,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import io.collaborapp.collaborapp.data.model.MessageEntity;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static io.reactivex.BackpressureStrategy.BUFFER;
 
@@ -43,14 +46,19 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         ChatEntity chat = dataSnapshot.getValue(ChatEntity.class);
-                        addChatToList(chat);
-                        e.onNext(chat);
-                        e.onComplete();
+                        getChatMessages(chat.getChatId()).subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(messageList -> {
+                                    chat.setMessageList(messageList);
+                                    addChatToList(chat);
+                                    e.onNext(chat);
+                                    e.onComplete();
+                                });
                     }
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        //TODO:Receive messages
+                        //TODO:Receive messages - Send meesages to a method that returns an observable to which the chatpresenter method is subscribed
                     }
 
                     @Override
@@ -68,6 +76,28 @@ public class ChatDbHelperImpl implements ChatDbHelper {
 
                     }
                 }), BUFFER
+        );
+    }
+
+    private Observable<List<MessageEntity>> getChatMessages(String chatId) {
+        return Observable.create(e -> mFirebaseDatabase.getReference().child("chat-messages").child(chatId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<MessageEntity> list = new ArrayList<>();
+                        for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                            MessageEntity message = messageSnapshot.getValue(MessageEntity.class);
+                            list.add(message);
+                        }
+                        e.onNext(list);
+                        e.onComplete();
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                })
         );
     }
 

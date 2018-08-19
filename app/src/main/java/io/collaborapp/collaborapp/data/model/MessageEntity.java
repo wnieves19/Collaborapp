@@ -6,34 +6,34 @@ package io.collaborapp.collaborapp.data.model;
 
 public class MessageEntity {
     private String messageId;
-    private String senderId;
-    private String messageText;
-    private long timeStamp;
+    private String from;
+    private String text;
+    private long createdAt;
     private String multimediaUrl;
     private String type;
 
     public String getSender() {
-        return senderId;
+        return from;
     }
 
     public void setSender(String sender) {
-        this.senderId = sender;
+        this.from = sender;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public String getText() {
+        return text;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public long getTimeStamp() {
-        return timeStamp;
+    public long getCreatedAt() {
+        return createdAt;
     }
 
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getMultimediaUrl() {

@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import io.collaborapp.collaborapp.BasePresenter;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.db.ChatDbHelper;
+import io.collaborapp.collaborapp.data.model.MessageEntity;
 
 /**
  * Created by wilfredonieves on 11/7/17.
@@ -19,7 +20,7 @@ public class ChatPresenter extends BasePresenter implements ChatContract.Present
     }
 
     @Override
-    public void sendMessage(String chatId) {
+    public void sendMessage(String chatId, MessageEntity messageEntity) {
 
     }
 
@@ -35,6 +36,11 @@ public class ChatPresenter extends BasePresenter implements ChatContract.Present
 
     @Override
     public void deleteChats() {
+
+    }
+
+    @Override
+    public void receiveMessage() {
 
     }
 
