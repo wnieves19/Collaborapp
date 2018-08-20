@@ -19,6 +19,8 @@ public interface ChatDbHelper {
 
     List<ChatEntity> getChatList();
 
+    ChatEntity getChat(String chatId);
+
     void sendMessage(String chatId, MessageEntity message);
 
     void deleteMessage(String messageId);

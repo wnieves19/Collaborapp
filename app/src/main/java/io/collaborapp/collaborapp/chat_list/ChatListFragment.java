@@ -1,9 +1,11 @@
 package io.collaborapp.collaborapp.chat_list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,10 +22,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
+import io.collaborapp.collaborapp.chat.ChatActivity;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
 
-public class ChatListFragment extends Fragment implements ChatListContract.View {
+public class ChatListFragment extends Fragment implements ChatListContract.View, ChatListAdapter.OnItemClickListener {
 
     @Inject
     ChatListContract.Presenter mChatListPresenter;
@@ -43,7 +46,7 @@ public class ChatListFragment extends Fragment implements ChatListContract.View 
         ((BaseApplication) getActivity().getApplication()).createChatComponent().inject(this);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ChatListAdapter();
+        mAdapter = new ChatListAdapter(mChatListPresenter,this);
         mRecyclerView.setAdapter(mAdapter);
         if (savedInstanceState == null) {
             mChatListPresenter.setView(this);
@@ -56,44 +59,20 @@ public class ChatListFragment extends Fragment implements ChatListContract.View 
     @Override
     public void updateChatList() {
         mAdapter.notifyDataSetChanged();
-        List<String> userIds = new ArrayList<>();
-        userIds.add("523f234f234sd");
-        mChatListPresenter.createChat(userIds, null);
     }
 
     @Override
     public void openChatView(ChatEntity chat) {
-//        updateChatList();
-        Toast.makeText(getActivity(), "The chat created was " + chat.getChatId(), Toast.LENGTH_SHORT).show();
-        //TODO: Open ChatView
+        updateChatList();
     }
 
-    public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder> {
-        @NonNull
-        @Override
-        public ChatListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_list_item, parent, false);
-            ChatListViewHolder vh = new ChatListViewHolder(v);
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ChatListViewHolder holder, int position) {
-            holder.mTextView.setText(mChatListPresenter.getChatList().get(position).getLastMessage().getText());
-        }
-
-        @Override
-        public int getItemCount() {
-            return mChatListPresenter.getChatList().size();
-        }
-
-        public class ChatListViewHolder extends RecyclerView.ViewHolder {
-            public TextView mTextView;
-
-            public ChatListViewHolder(View itemView) {
-                super(itemView);
-                mTextView = itemView.findViewById(R.id.chat_name);
-            }
-        }
+    @Override
+    public void onItemClick(ChatEntity chat) {
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra("chatId", chat.getChatId());
+        getActivity().startActivity(intent);
     }
+
+
+
 }

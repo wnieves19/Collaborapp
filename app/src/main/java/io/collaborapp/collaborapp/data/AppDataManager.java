@@ -78,6 +78,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public ChatEntity getChat(String chatId) {
+        return mChatDbHelper.getChat(chatId);
+
+    }
+
+    @Override
     public void sendMessage(String chatId, MessageEntity message) {
         mChatDbHelper.sendMessage(chatId, message);
     }
@@ -86,4 +92,5 @@ public class AppDataManager implements DataManager {
     public void deleteMessage(String messageId) {
         mChatDbHelper.deleteMessage(messageId);
     }
+
 }

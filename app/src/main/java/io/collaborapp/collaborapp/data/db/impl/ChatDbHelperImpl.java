@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.collaborapp.collaborapp.data.db.ChatDbHelper;
+import io.collaborapp.collaborapp.data.model.ChatDbUpdate;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
@@ -50,14 +51,17 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(messageList -> {
                                     chat.setMessageList(messageList);
-                                    addChatToList(chat);
                                     e.onNext(chat);
                                     e.onComplete();
                                 });
+                        //TODO Check if chat exists in list
+                        addChatToList(chat);
                     }
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        ChatEntity chatEntity = getChat(dataSnapshot.getKey());
+                        chatEntity.getChatFlowableEmitter().onNext(new ChatDbUpdate(chatEntity.getChatId(), ChatDbUpdate.NEW_MESSAGE));
                         //TODO:Receive messages - Send meesages to a method that returns an observable to which the chatpresenter method is subscribed
                     }
 
@@ -77,6 +81,8 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                     }
                 }), BUFFER
         );
+
+
     }
 
     private Observable<List<MessageEntity>> getChatMessages(String chatId) {
@@ -105,6 +111,14 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     public List<ChatEntity> getChatList() {
         if (mChatList == null) mChatList = new ArrayList<>();
         return mChatList;
+    }
+
+    @Override
+    public ChatEntity getChat(String chatId) {
+        for (ChatEntity chat : getChatList()) {
+            if (chat.getChatId().equals(chatId)) return chat;
+        }
+        return null;
     }
 
     private void addChatToList(ChatEntity chat) {

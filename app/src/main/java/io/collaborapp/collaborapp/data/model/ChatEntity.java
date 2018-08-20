@@ -2,6 +2,11 @@ package io.collaborapp.collaborapp.data.model;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+
+import static io.reactivex.BackpressureStrategy.BUFFER;
+
 /**
  * Created by wilfredonieves on 11/9/17.
  */
@@ -15,8 +20,19 @@ public class ChatEntity {
     private List<String> members;
     private long createdAt;
 
-    public ChatEntity() {
+    private Flowable<ChatDbUpdate> chatObservable;
+    private FlowableEmitter<ChatDbUpdate> chatFlowableEmitter;
 
+    public ChatEntity() {
+        chatObservable = Flowable.create(e -> this.chatFlowableEmitter = e, BUFFER);
+    }
+
+    public FlowableEmitter<ChatDbUpdate> getChatFlowableEmitter() {
+        return chatFlowableEmitter;
+    }
+
+    public Flowable<ChatDbUpdate> getChatObservable() {
+        return chatObservable;
     }
 
     public ChatEntity(String chatId) {
