@@ -1,10 +1,10 @@
 package io.collaborapp.collaborapp.chat_list;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import io.collaborapp.collaborapp.BasePresenter;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 
 public interface ChatListContract {
@@ -15,7 +15,7 @@ public interface ChatListContract {
         void openChatView(ChatEntity chat);
     }
 
-    interface Presenter {
+    interface Presenter extends BasePresenter{
         void deleteChats(String[] chatIds);
 
         void createChat(List<String> userId, @Nullable String groupName);

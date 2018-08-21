@@ -19,6 +19,7 @@ import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
 import io.collaborapp.collaborapp.data.db.ChatDbHelper;
 import io.collaborapp.collaborapp.data.db.impl.AuthenticationDbHelperImpl;
 import io.collaborapp.collaborapp.data.db.impl.ChatDbHelperImpl;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by wilfredonieves on 10/27/17.
@@ -74,6 +75,11 @@ public class AppModule {
     @Singleton
     DataManager provideDataManager(AppDataManager appDataManager){
         return appDataManager;
+    }
+
+    @Provides
+    CompositeDisposable provideCompositeDisposable() {
+        return new CompositeDisposable();
     }
 }
 

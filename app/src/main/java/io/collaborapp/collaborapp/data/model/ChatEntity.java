@@ -12,7 +12,6 @@ import static io.reactivex.BackpressureStrategy.BUFFER;
  */
 
 public class ChatEntity {
-
     private String chatId;
     private String title = "";
     private List<MessageEntity> messageList;
@@ -27,8 +26,10 @@ public class ChatEntity {
         chatObservable = Flowable.create(e -> this.chatFlowableEmitter = e, BUFFER);
     }
 
-    public FlowableEmitter<ChatDbUpdate> getChatFlowableEmitter() {
-        return chatFlowableEmitter;
+    public void emitChatUpdate(ChatDbUpdate dbUpdate){
+        if(chatFlowableEmitter!=null) {
+            chatFlowableEmitter.onNext(dbUpdate);
+        }
     }
 
     public Flowable<ChatDbUpdate> getChatObservable() {

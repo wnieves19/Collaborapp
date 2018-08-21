@@ -1,5 +1,7 @@
 package io.collaborapp.collaborapp.chat;
 
+import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.BasePresenterImpl;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
 
@@ -19,7 +21,7 @@ public interface ChatContract {
 
     }
 
-    interface Presenter {
+    interface Presenter extends BasePresenter{
         void sendMessage(String chatId, MessageEntity messageEntity);
 
         void getMessages(String chatId);

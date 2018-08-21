@@ -158,6 +158,12 @@ public class AuthenticationFragment extends Fragment implements GoogleApiClient.
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mAuthenticationPresenter.onDetach();
+    }
+
+    @Override
     public void setErrorEmailField() {
         //Ignored intentionally
     }

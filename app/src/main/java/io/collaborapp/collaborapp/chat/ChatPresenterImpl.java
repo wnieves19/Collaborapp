@@ -2,31 +2,32 @@ package io.collaborapp.collaborapp.chat;
 
 import javax.inject.Inject;
 
-import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.BasePresenterImpl;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.model.ChatDbUpdate;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by wilfredonieves on 11/7/17.
  */
 
-public class ChatPresenter extends BasePresenter implements ChatContract.Presenter {
+public class ChatPresenterImpl extends BasePresenterImpl implements ChatContract.Presenter {
 
     ChatContract.View mChatView;
 
     @Inject
-    public ChatPresenter(DataManager dataManager) {
-        super(dataManager);
+    public ChatPresenterImpl(DataManager dataManager, CompositeDisposable compositeDisposable) {
+        super(dataManager, compositeDisposable);
 
     }
 
     @Override
     public void onViewInitialized(ChatEntity chatEntity) {
-        chatEntity.getChatObservable()
+        getCompositeDisposable().add(chatEntity.getChatObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(chatDbUpdate -> {
@@ -47,8 +48,7 @@ public class ChatPresenter extends BasePresenter implements ChatContract.Present
 
                             break;
                     }
-                    mChatView.updateMessageList();
-                });
+                }));
     }
 
     @Override

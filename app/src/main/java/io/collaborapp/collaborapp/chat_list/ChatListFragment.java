@@ -1,5 +1,6 @@
 package io.collaborapp.collaborapp.chat_list;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -52,13 +53,23 @@ public class ChatListFragment extends Fragment implements ChatListContract.View,
             mChatListPresenter.setView(this);
             mChatListPresenter.onViewInitialized();
         }
-
         return view;
     }
 
     @Override
     public void updateChatList() {
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mChatListPresenter.onDetach();
     }
 
     @Override

@@ -53,6 +53,13 @@ public class LoginFragment extends Fragment implements AuthenticationContract.Vi
         mAuthenticationPresenter.logInWithEmailAndPassword(mEmail.getText().toString(), mPassword.getText().toString());
     }
 
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mAuthenticationPresenter.onDetach();
+    }
+
     @Override
     public void onPause() {
         super.onPause();

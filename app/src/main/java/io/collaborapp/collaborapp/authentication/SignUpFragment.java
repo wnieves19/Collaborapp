@@ -53,6 +53,12 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mAuthenticationPresenter.onDetach();
+    }
+
+    @Override
     public void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
     }

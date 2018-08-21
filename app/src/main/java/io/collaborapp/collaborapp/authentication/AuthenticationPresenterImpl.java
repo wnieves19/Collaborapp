@@ -7,14 +7,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
-import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.BasePresenterImpl;
 import io.collaborapp.collaborapp.data.DataManager;
-import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.collaborapp.collaborapp.rx.DefaultObserver;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.Nullable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -22,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by wilfredonieves on 10/16/17.
  */
-public class AuthenticationPresenter extends BasePresenter implements AuthenticationContract.Presenter {
+public class AuthenticationPresenterImpl extends BasePresenterImpl implements AuthenticationContract.Presenter {
     private AuthenticationContract.View mAuthenticationView;
 
     private AuthenticationContract.LogOutView mLogoutView;
@@ -31,11 +31,11 @@ public class AuthenticationPresenter extends BasePresenter implements Authentica
     private final static int MIN_CHARS_PASSWORD = 5;
 
     @Inject
-    public AuthenticationPresenter(DataManager dataManager) {
-        super(dataManager);
-        getDataManager().getAuthUser().subscribeOn(Schedulers.io())
+    public AuthenticationPresenterImpl(DataManager dataManager, CompositeDisposable compositeDisposable) {
+        super(dataManager, compositeDisposable);
+        getCompositeDisposable().add(getDataManager().getAuthUser().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onAuthUser);
+                .subscribe(this::onAuthUser));
     }
 
     private void onAuthUser(FirebaseUser user) {
@@ -47,7 +47,7 @@ public class AuthenticationPresenter extends BasePresenter implements Authentica
     @Override
     public void logInWithGoogle(GoogleSignInAccount account) {
         mAuthenticationView.showProgress();
-        getDataManager().signInWithGoogle(account).map((Function<AuthResult, Object>) authResult -> {
+        getCompositeDisposable().add(getDataManager().signInWithGoogle(account).map((Function<AuthResult, Object>) authResult -> {
             if (authResult.getUser() != null) {
                 Observable<?> observable = getDataManager().createNewUser(authResult.getUser().getUid(), authResult.getUser().getEmail())
                         .subscribeOn(Schedulers.io())
@@ -61,7 +61,7 @@ public class AuthenticationPresenter extends BasePresenter implements Authentica
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe());
 
     }
 
@@ -69,10 +69,10 @@ public class AuthenticationPresenter extends BasePresenter implements Authentica
     public void logInWithEmailAndPassword(String email, String password) {
         if (!validateFields(email, password, null)) return;
         mAuthenticationView.showProgress();
-        getDataManager().signInWithEmail(email, password)
+        getCompositeDisposable().add(getDataManager().signInWithEmail(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onTaskSuccess, this::onLoginFailed);
+                .subscribe(this::onTaskSuccess, this::onLoginFailed));
     }
 
     @Override
@@ -85,10 +85,10 @@ public class AuthenticationPresenter extends BasePresenter implements Authentica
             return;
         }
         mAuthenticationView.showProgress();
-        getDataManager().signUpWithEmail(email, password)
+        getCompositeDisposable().add(getDataManager().signUpWithEmail(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onTaskSuccess, this::onLoginFailed);
+                .subscribe(this::onTaskSuccess, this::onLoginFailed));
     }
 
     @Override

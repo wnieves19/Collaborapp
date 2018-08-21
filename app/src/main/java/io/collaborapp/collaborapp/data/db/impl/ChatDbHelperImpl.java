@@ -52,17 +52,19 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                                 .subscribe(messageList -> {
                                     chat.setMessageList(messageList);
                                     e.onNext(chat);
-                                    e.onComplete();
                                 });
-                        //TODO Check if chat exists in list
                         addChatToList(chat);
                     }
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         ChatEntity chatEntity = getChat(dataSnapshot.getKey());
-                        chatEntity.getChatFlowableEmitter().onNext(new ChatDbUpdate(chatEntity.getChatId(), ChatDbUpdate.NEW_MESSAGE));
-                        //TODO:Receive messages - Send meesages to a method that returns an observable to which the chatpresenter method is subscribed
+                        ChatEntity dbChat = dataSnapshot.getValue(ChatEntity.class);
+                        mChatList.set(mChatList.indexOf(chatEntity), dbChat);
+                        //TODO If no subscribers, send Push notification
+                        chatEntity.emitChatUpdate(new ChatDbUpdate(dbChat.getChatId(), ChatDbUpdate.NEW_MESSAGE));
+                        e.onNext(dbChat);
+
                     }
 
                     @Override
@@ -81,7 +83,6 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                     }
                 }), BUFFER
         );
-
 
     }
 
@@ -123,7 +124,8 @@ public class ChatDbHelperImpl implements ChatDbHelper {
 
     private void addChatToList(ChatEntity chat) {
         if (mChatList == null) mChatList = new ArrayList<>();
-        mChatList.add(chat);
+        if (getChat(chat.getChatId()) == null)
+            mChatList.add(chat);
     }
 
     @Override

@@ -5,19 +5,20 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.BasePresenterImpl;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class ChatListPresenter extends BasePresenter implements ChatListContract.Presenter {
+public class ChatListPresenterImpl extends BasePresenterImpl implements ChatListContract.Presenter {
     private ChatListContract.View mChatListView;
 
     @Inject
-    public ChatListPresenter(DataManager dataManager) {
-        super(dataManager);
+    public ChatListPresenterImpl(DataManager dataManager, CompositeDisposable compositeDisposable) {
+        super(dataManager, compositeDisposable);
     }
 
     @Override
@@ -32,24 +33,24 @@ public class ChatListPresenter extends BasePresenter implements ChatListContract
 
     @Override
     public void createChat(List<String> userId, @Nullable String groupName) {
-        Observable<?> observable = getDataManager().createChat(userId, groupName)
+        getCompositeDisposable().add(getDataManager().createChat(userId, groupName)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-        observable.subscribe(newChat -> {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(newChat -> {
             if (newChat == null) return;
             mChatListView.openChatView((ChatEntity) newChat);
-        });
+        }));
     }
 
     @Override
     public void deleteChats(String[] chatIds) {
-        getDataManager().deleteChat(chatIds)
+        getCompositeDisposable().add(getDataManager().deleteChat(chatIds)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(chatDeleted -> {
                     if (chatDeleted)
                         mChatListView.updateChatList();
-                });
+                }));
 
     }
 

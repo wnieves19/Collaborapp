@@ -30,7 +30,7 @@ public interface AuthenticationContract {
         void navigateToAuthFragment();
     }
 
-    interface Presenter {
+    interface Presenter extends BasePresenter {
 
         void logInWithGoogle(GoogleSignInAccount account);
 

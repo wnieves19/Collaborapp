@@ -3,8 +3,9 @@ package io.collaborapp.collaborapp.di.authentication;
 import dagger.Module;
 import dagger.Provides;
 import io.collaborapp.collaborapp.authentication.AuthenticationContract;
-import io.collaborapp.collaborapp.authentication.AuthenticationPresenter;
+import io.collaborapp.collaborapp.authentication.AuthenticationPresenterImpl;
 import io.collaborapp.collaborapp.data.DataManager;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by wilfredonieves on 10/27/17.
@@ -13,8 +14,8 @@ import io.collaborapp.collaborapp.data.DataManager;
 public class AuthenticationModule {
     @Provides
     @AppScope
-    AuthenticationContract.Presenter providePresenter(DataManager authenticationManager) {
-        return new AuthenticationPresenter(authenticationManager);
+    AuthenticationContract.Presenter providePresenter(DataManager authenticationManager, CompositeDisposable compositeDisposable) {
+        return new AuthenticationPresenterImpl(authenticationManager, compositeDisposable);
     }
 
 }
