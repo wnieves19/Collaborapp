@@ -21,7 +21,10 @@
             android:name=".chat_list.ChatListActivity"
             android:label="@string/title_activity_chat_list"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".chat.ChatActivity"></activity>
+        <activity
+            android:name=".chat.ChatActivity"
+            android:configChanges="keyboard|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"></activity>
     </application>
 
 </manifest>

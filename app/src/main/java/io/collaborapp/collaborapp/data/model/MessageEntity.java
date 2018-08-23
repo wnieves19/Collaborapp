@@ -12,11 +12,22 @@ public class MessageEntity {
     private String multimediaUrl;
     private String type;
 
-    public String getSender() {
+    public static final String MESSAGE_TYPE_IM = "im";
+
+    public MessageEntity() {
+    }
+
+    public MessageEntity(String text, String type) {
+        this.text = text;
+        this.type = type;
+        this.createdAt = System.currentTimeMillis();
+    }
+
+    public String getFrom() {
         return from;
     }
 
-    public void setSender(String sender) {
+    public void setFrom(String sender) {
         this.from = sender;
     }
 

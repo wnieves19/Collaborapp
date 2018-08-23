@@ -26,8 +26,8 @@ public class ChatEntity {
         chatObservable = Flowable.create(e -> this.chatFlowableEmitter = e, BUFFER);
     }
 
-    public void emitChatUpdate(ChatDbUpdate dbUpdate){
-        if(chatFlowableEmitter!=null) {
+    public void emitChatUpdate(ChatDbUpdate dbUpdate) {
+        if (chatFlowableEmitter != null) {
             chatFlowableEmitter.onNext(dbUpdate);
         }
     }
@@ -38,6 +38,7 @@ public class ChatEntity {
 
     public ChatEntity(String chatId) {
         this.chatId = chatId;
+        this.createdAt = System.currentTimeMillis();
     }
 
     public String getChatId() {

@@ -8,17 +8,17 @@ public class ChatDbUpdate {
     public static final int MEMBER_REMOVED = 3;
     public static final int TITLE_CHANGED = 4;
 
-    private String chatId;
+    private ChatEntity chat;
 
     private int response;
 
-    public ChatDbUpdate(String chatId, int response) {
-        this.chatId = chatId;
+    public ChatDbUpdate(ChatEntity chat, int response) {
+        this.chat = chat;
         this.response = response;
     }
 
-    public String getChatId() {
-        return chatId;
+    public ChatEntity getChat() {
+        return chat;
     }
 
     public int getResponse() {

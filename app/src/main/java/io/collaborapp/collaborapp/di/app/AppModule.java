@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.LinearLayoutManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -13,6 +14,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.collaborapp.collaborapp.chat.ChatMessagesAdapter;
 import io.collaborapp.collaborapp.data.AppDataManager;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
@@ -80,6 +82,11 @@ public class AppModule {
     @Provides
     CompositeDisposable provideCompositeDisposable() {
         return new CompositeDisposable();
+    }
+
+    @Provides
+    LinearLayoutManager provideLinearLayoutManager(){
+        return new LinearLayoutManager(context);
     }
 }
 

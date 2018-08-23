@@ -1,5 +1,7 @@
 package io.collaborapp.collaborapp.chat;
 
+import java.util.List;
+
 import io.collaborapp.collaborapp.BasePresenter;
 import io.collaborapp.collaborapp.BasePresenterImpl;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
@@ -11,7 +13,7 @@ import io.collaborapp.collaborapp.data.model.MessageEntity;
 
 public interface ChatContract {
     interface View {
-        void updateMessageList();
+        void updateMessageList(List<MessageEntity> messageList);
 
         void updateChatTitle();
 
@@ -32,7 +34,7 @@ public interface ChatContract {
 
         void receiveMessage();
 
-        void onViewInitialized(ChatEntity chatEntity);
+        void onViewInitialized(String chatId);
 
         ChatEntity getChat(String chatId);
 

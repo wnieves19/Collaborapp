@@ -12,7 +12,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,10 +62,11 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         ChatEntity chatEntity = getChat(dataSnapshot.getKey());
                         ChatEntity dbChat = dataSnapshot.getValue(ChatEntity.class);
-                        mChatList.set(mChatList.indexOf(chatEntity), dbChat);
+                        chatEntity.setLastMessage(dbChat.getLastMessage());
+                        chatEntity.getMessageList().add(dbChat.getLastMessage());
                         //TODO If no subscribers, send Push notification
-                        chatEntity.emitChatUpdate(new ChatDbUpdate(dbChat.getChatId(), ChatDbUpdate.NEW_MESSAGE));
-                        e.onNext(dbChat);
+                        chatEntity.emitChatUpdate(new ChatDbUpdate(chatEntity, ChatDbUpdate.NEW_MESSAGE));
+                        e.onNext(chatEntity);
 
                     }
 
@@ -181,14 +184,22 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     }
 
     @Override
-    public Observable<Boolean> deleteChat(String[] chatId) {
-        //TODO: Change chat property to depict delition, return boolean
-        return null;
+    public void sendMessage(String chatId, MessageEntity message) {
+        String messageKey = mFirebaseDatabase.getReference().child("chat-messages").child(chatId).push().getKey();
+        message.setMessageId(messageKey);
+        message.setFrom(mAuth.getCurrentUser().getUid());
+        mFirebaseDatabase.getReference().child("chat-messages").child(chatId).child(message.getMessageId()).setValue(message);
+        Map<String, Object> childUpdates = new HashMap<>();
+        for (String userId : getChat(chatId).getMembers()) {
+            childUpdates.put("/user-chats/" + userId + "/" + chatId + "/lastMessage", message);
+        }
+        mFirebaseDatabase.getReference().updateChildren(childUpdates);
     }
 
     @Override
-    public void sendMessage(String chatId, MessageEntity message) {
-
+    public Observable<Boolean> deleteChat(String[] chatId) {
+        //TODO: Change chat property to depict delition, return boolean
+        return null;
     }
 
     @Override

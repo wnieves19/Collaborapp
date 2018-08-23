@@ -26,14 +26,16 @@ public class ChatPresenterImpl extends BasePresenterImpl implements ChatContract
     }
 
     @Override
-    public void onViewInitialized(ChatEntity chatEntity) {
-        getCompositeDisposable().add(chatEntity.getChatObservable()
+    public void onViewInitialized(String chatId) {
+        mChatView.updateMessageList(getChat(chatId).getMessageList());
+
+        getCompositeDisposable().add(getChat(chatId).getChatObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(chatDbUpdate -> {
                     switch (chatDbUpdate.getResponse()) {
                         case ChatDbUpdate.NEW_MESSAGE:
-                            mChatView.updateMessageList();
+                            mChatView.updateMessageList(chatDbUpdate.getChat().getMessageList());
                             break;
                         case ChatDbUpdate.TITLE_CHANGED:
 
@@ -53,12 +55,13 @@ public class ChatPresenterImpl extends BasePresenterImpl implements ChatContract
 
     @Override
     public ChatEntity getChat(String chatId) {
-       return getDataManager().getChat(chatId);
+        return getDataManager().getChat(chatId);
 
     }
 
     @Override
     public void sendMessage(String chatId, MessageEntity messageEntity) {
+        getDataManager().sendMessage(chatId, messageEntity);
 
     }
 

@@ -4,6 +4,7 @@ import dagger.Subcomponent;
 import io.collaborapp.collaborapp.authentication.AuthenticationFragment;
 import io.collaborapp.collaborapp.authentication.LoginFragment;
 import io.collaborapp.collaborapp.authentication.SignUpFragment;
+import io.collaborapp.collaborapp.chat.ChatMessagesAdapter;
 import io.collaborapp.collaborapp.chat_list.ChatListActivity;
 
 /**
@@ -21,4 +22,5 @@ public interface AuthenticationComponent {
 
     void inject(ChatListActivity target);
 
+    void inject(ChatMessagesAdapter target);
 }

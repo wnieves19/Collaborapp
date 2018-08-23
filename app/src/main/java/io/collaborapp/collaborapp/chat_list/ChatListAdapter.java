@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 
@@ -31,11 +33,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
     @Override
     public void onBindViewHolder(@NonNull ChatListViewHolder holder, int position) {
-        holder.mTextView.setText(mChatListPresenter.getChatList().get(position).getLastMessage().getText());
-        holder.mCardView.setOnClickListener(v -> {
-            listener.onItemClick(mChatListPresenter.getChatList().get(position));
-        });
-
+        holder.onBind(position);
     }
 
     @Override
@@ -44,15 +42,24 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     }
 
     public class ChatListViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
-        public CardView mCardView;
+        @BindView(R.id.chat_name)
+        TextView mTextView;
+        @BindView(R.id.card_view)
+        CardView mCardView;
 
         public ChatListViewHolder(View itemView) {
             super(itemView);
-            mTextView = itemView.findViewById(R.id.chat_name);
-            mCardView = itemView.findViewById(R.id.card_view);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void onBind(int position) {
+            mTextView.setText(mChatListPresenter.getChatList().get(position).getLastMessage().getText());
+            mCardView.setOnClickListener(v -> {
+                listener.onItemClick(mChatListPresenter.getChatList().get(position));
+            });
         }
     }
+
     public interface OnItemClickListener {
         void onItemClick(ChatEntity chat);
     }
