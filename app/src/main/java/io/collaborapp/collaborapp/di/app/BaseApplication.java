@@ -8,7 +8,7 @@ import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.di.authentication.AuthenticationComponent;
 import io.collaborapp.collaborapp.di.authentication.AuthenticationModule;
 import io.collaborapp.collaborapp.di.chat.ChatComponent;
-import io.collaborapp.collaborapp.di.chat.ChatListModule;
+import io.collaborapp.collaborapp.di.chat.ChatModule;
 
 /**
  * Created by wilfredonieves on 10/27/17.
@@ -40,7 +40,7 @@ public class BaseApplication extends Application {
     }
 
     public ChatComponent createChatComponent(){
-        mChatComponent = mAppComponent.plus(new ChatListModule());
+        mChatComponent = mAppComponent.plus(new ChatModule());
         return mChatComponent;
     }
 

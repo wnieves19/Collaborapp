@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import io.collaborapp.collaborapp.BasePresenterImpl;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -23,12 +22,13 @@ public class ChatListPresenterImpl extends BasePresenterImpl implements ChatList
 
     @Override
     public void onViewInitialized() {
-        getDataManager().fetchChatList()
+        mChatListView.addChatList(getChatList());
+        getCompositeDisposable().add(getDataManager().fetchChatList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(chatEntity -> {
-                    mChatListView.updateChatList();
-                });
+                    mChatListView.addChatList(getChatList());
+                }));
     }
 
     @Override
@@ -37,9 +37,9 @@ public class ChatListPresenterImpl extends BasePresenterImpl implements ChatList
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(newChat -> {
-            if (newChat == null) return;
-            mChatListView.openChatView((ChatEntity) newChat);
-        }));
+                    if (newChat == null) return;
+                    mChatListView.openChatView((ChatEntity) newChat);
+                }));
     }
 
     @Override

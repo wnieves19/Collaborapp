@@ -26,8 +26,13 @@ import io.collaborapp.collaborapp.data.model.MessageEntity;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.AsyncSubject;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 import static io.reactivex.BackpressureStrategy.BUFFER;
 
@@ -60,6 +65,7 @@ public class ChatDbHelperImpl implements ChatDbHelper {
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                         ChatEntity chatEntity = getChat(dataSnapshot.getKey());
                         ChatEntity dbChat = dataSnapshot.getValue(ChatEntity.class);
                         chatEntity.setLastMessage(dbChat.getLastMessage());
@@ -67,6 +73,7 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                         //TODO If no subscribers, send Push notification
                         chatEntity.emitChatUpdate(new ChatDbUpdate(chatEntity, ChatDbUpdate.NEW_MESSAGE));
                         e.onNext(chatEntity);
+
 
                     }
 

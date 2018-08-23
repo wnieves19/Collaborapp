@@ -2,6 +2,8 @@ package io.collaborapp.collaborapp.chat_list;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,7 +18,7 @@ import io.collaborapp.collaborapp.authentication.AuthenticationActivity;
 import io.collaborapp.collaborapp.authentication.AuthenticationContract;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
 
-public class ChatListActivity extends AppCompatActivity  implements AuthenticationContract.LogOutView{
+public class ChatListActivity extends AppCompatActivity implements AuthenticationContract.LogOutView {
     @Inject
     AuthenticationContract.Presenter mAuthenticationPresenter;
 
@@ -28,6 +30,13 @@ public class ChatListActivity extends AppCompatActivity  implements Authenticati
         setSupportActionBar(toolbar);
         ((BaseApplication) getApplication()).createAuthenticationComponent().inject(this);
         mAuthenticationPresenter.setLogoutView(this);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        ChatListFragment fragment = new ChatListFragment();
+
+        fragmentTransaction.add(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -39,8 +48,8 @@ public class ChatListActivity extends AppCompatActivity  implements Authenticati
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.sign_out:{
+        switch (item.getItemId()) {
+            case R.id.sign_out: {
                 mAuthenticationPresenter.signOut();
             }
         }

@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -29,9 +31,11 @@ public class ChatListFragment extends Fragment implements ChatListContract.View,
     @BindView(R.id.chat_list_recycler_view)
     RecyclerView mRecyclerView;
 
-    private RecyclerView.LayoutManager mLayoutManager;
+    @Inject
+    LinearLayoutManager mLayoutManager;
 
-    private RecyclerView.Adapter mAdapter;
+    @Inject
+    ChatListAdapter mAdapter;
 
     @Nullable
     @Override
@@ -39,15 +43,21 @@ public class ChatListFragment extends Fragment implements ChatListContract.View,
         View view = inflater.inflate(R.layout.content_chat_list, container, false);
         ButterKnife.bind(this, view);
         ((BaseApplication) getActivity().getApplication()).createChatComponent().inject(this);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ChatListAdapter(mChatListPresenter,this);
-        mRecyclerView.setAdapter(mAdapter);
+
         if (savedInstanceState == null) {
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mAdapter.setListener(this);
+            mRecyclerView.setAdapter(mAdapter);
             mChatListPresenter.setView(this);
             mChatListPresenter.onViewInitialized();
         }
         return view;
+    }
+
+    @Override
+    public void addChatList(List<ChatEntity> chatList) {
+        mAdapter.addChats(chatList);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -68,7 +78,7 @@ public class ChatListFragment extends Fragment implements ChatListContract.View,
 
     @Override
     public void openChatView(ChatEntity chat) {
-        updateChatList();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -77,7 +87,6 @@ public class ChatListFragment extends Fragment implements ChatListContract.View,
         intent.putExtra("chatId", chat.getChatId());
         getActivity().startActivity(intent);
     }
-
 
 
 }

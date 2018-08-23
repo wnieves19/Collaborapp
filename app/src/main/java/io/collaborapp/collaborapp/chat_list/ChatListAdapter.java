@@ -9,18 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
+import io.collaborapp.collaborapp.chat.ChatMessagesAdapter;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
+import io.collaborapp.collaborapp.data.model.MessageEntity;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder> {
-    private final OnItemClickListener listener;
-    private ChatListContract.Presenter mChatListPresenter;
 
-    public ChatListAdapter(ChatListContract.Presenter chatListPresenter, OnItemClickListener listener) {
-        this.listener = listener;
-        this.mChatListPresenter = chatListPresenter;
+    private OnItemClickListener mListener;
+
+    private List<ChatEntity> mChatList;
+
+    public ChatListAdapter(List<ChatEntity> mChatList) {
+        this.mChatList = mChatList;
     }
 
     @NonNull
@@ -38,7 +43,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
     @Override
     public int getItemCount() {
-        return mChatListPresenter.getChatList().size();
+        return mChatList.size();
+    }
+
+    public void setListener(OnItemClickListener onItemClickListener) {
+        this.mListener = onItemClickListener;
+    }
+
+    public void addChats(List<ChatEntity> chatList) {
+        mChatList.clear();
+        mChatList.addAll(chatList);
+        notifyDataSetChanged();
     }
 
     public class ChatListViewHolder extends RecyclerView.ViewHolder {
@@ -53,9 +68,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         }
 
         public void onBind(int position) {
-            mTextView.setText(mChatListPresenter.getChatList().get(position).getLastMessage().getText());
+            mTextView.setText(mChatList.get(position).getLastMessage().getText());
             mCardView.setOnClickListener(v -> {
-                listener.onItemClick(mChatListPresenter.getChatList().get(position));
+                mListener.onItemClick(mChatList.get(position));
             });
         }
     }

@@ -10,12 +10,14 @@ import io.collaborapp.collaborapp.data.model.ChatEntity;
 public interface ChatListContract {
     interface View {
 
+        void addChatList(List<ChatEntity> chatList);
+
         void updateChatList();
 
         void openChatView(ChatEntity chat);
     }
 
-    interface Presenter extends BasePresenter{
+    interface Presenter extends BasePresenter {
         void deleteChats(String[] chatIds);
 
         void createChat(List<String> userId, @Nullable String groupName);

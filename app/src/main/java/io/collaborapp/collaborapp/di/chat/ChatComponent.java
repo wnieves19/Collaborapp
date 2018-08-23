@@ -6,7 +6,7 @@ import io.collaborapp.collaborapp.chat_list.ChatListFragment;
 import io.collaborapp.collaborapp.di.authentication.AppScope;
 
 @AppScope
-@Subcomponent(modules = {ChatListModule.class})
+@Subcomponent(modules = {ChatModule.class})
 public interface ChatComponent {
     void inject(ChatListFragment target);
 
