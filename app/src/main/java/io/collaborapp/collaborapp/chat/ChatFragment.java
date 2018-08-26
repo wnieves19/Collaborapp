@@ -54,18 +54,18 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatMes
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         ButterKnife.bind(this, view);
-        ((BaseApplication) getActivity().getApplication()).createChatComponent().inject(this);
-        if (savedInstanceState == null) {
-            mChatPresenter.setView(this);
-            messagesAdapter.setListener(this);
 
-            mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(messagesAdapter);
-            mChatId = getArguments().getString("chatId");
-            mChatPresenter.onViewInitialized(mChatId);
-        }
+        ((BaseApplication) getActivity().getApplication()).createChatComponent().inject(this);
+        mChatPresenter.setView(this);
+        messagesAdapter.setListener(this);
+
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(messagesAdapter);
+        mChatId = getArguments().getString("chatId");
+        mChatPresenter.onViewInitialized(mChatId);
+
         return view;
     }
 
@@ -86,13 +86,14 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatMes
     @Override
     public void onDetach() {
         super.onDetach();
-        mChatPresenter.onDetach();
+        if (mChatPresenter != null)
+            mChatPresenter.onDetach();
     }
 
     @Override
     public void updateMessageList(List<MessageEntity> messageList) {
         messagesAdapter.addMessages(messageList);
-        mRecyclerView.scrollToPosition(messageList.size()-1);
+        mRecyclerView.scrollToPosition(messageList.size() - 1);
     }
 
     @Override

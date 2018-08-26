@@ -42,9 +42,9 @@ public class ChatListFragment extends Fragment implements ChatListContract.View,
     public android.view.View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_chat_list, container, false);
         ButterKnife.bind(this, view);
-        ((BaseApplication) getActivity().getApplication()).createChatComponent().inject(this);
 
         if (savedInstanceState == null) {
+            ((BaseApplication) getActivity().getApplication()).createChatComponent().inject(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
             mAdapter.setListener(this);
             mRecyclerView.setAdapter(mAdapter);
@@ -73,7 +73,8 @@ public class ChatListFragment extends Fragment implements ChatListContract.View,
     @Override
     public void onDetach() {
         super.onDetach();
-        mChatListPresenter.onDetach();
+        if (mChatListPresenter != null)
+            mChatListPresenter.onDetach();
     }
 
     @Override

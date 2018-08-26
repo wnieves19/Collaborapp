@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -25,75 +26,87 @@ import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.AsyncSubject;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
 
-import static io.reactivex.BackpressureStrategy.BUFFER;
+import static io.reactivex.BackpressureStrategy.LATEST;
 
 @Singleton
 public class ChatDbHelperImpl implements ChatDbHelper {
     private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private List<ChatEntity> mChatList;
+    private DatabaseReference mChatReference;
+    private ChildEventListener eventListener;
 
     @Inject
     public ChatDbHelperImpl(FirebaseAuth firebaseAuth, FirebaseDatabase firebaseDatabase) {
         mFirebaseDatabase = firebaseDatabase;
         mAuth = firebaseAuth;
+        mChatReference = mFirebaseDatabase.getReference().child("user-chats").child(mAuth.getCurrentUser().getUid());
     }
 
     @Override
     public Flowable<ChatEntity> fetchChatList() {
-        return Flowable.create(e -> mFirebaseDatabase.getReference().child("user-chats").child(mAuth.getCurrentUser().getUid()).addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        ChatEntity chat = dataSnapshot.getValue(ChatEntity.class);
-                        getChatMessages(chat.getChatId()).subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(messageList -> {
-                                    chat.setMessageList(messageList);
-                                    e.onNext(chat);
-                                });
-                        addChatToList(chat);
-                    }
+        removeListener();
+        return Flowable.create(e -> mChatReference.addChildEventListener(getChatEventListener(e)), LATEST);
+    }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+    public ChildEventListener getChatEventListener(FlowableEmitter<ChatEntity> chatEmitter) {
+        eventListener = new ChildEventListener() {
 
-                        ChatEntity chatEntity = getChat(dataSnapshot.getKey());
-                        ChatEntity dbChat = dataSnapshot.getValue(ChatEntity.class);
-                        chatEntity.setLastMessage(dbChat.getLastMessage());
-                        chatEntity.getMessageList().add(dbChat.getLastMessage());
-                        //TODO If no subscribers, send Push notification
-                        chatEntity.emitChatUpdate(new ChatDbUpdate(chatEntity, ChatDbUpdate.NEW_MESSAGE));
-                        e.onNext(chatEntity);
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ChatEntity chat = dataSnapshot.getValue(ChatEntity.class);
+                getChatMessages(chat.getChatId()).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(messageList -> {
+                            chat.setMessageList(messageList);
+                            chatEmitter.onNext(chat);
 
+                        });
+                addChatToList(chat);
+            }
 
-                    }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ChatEntity chatEntity = getChat(dataSnapshot.getKey());
+                ChatEntity dbChat = dataSnapshot.getValue(ChatEntity.class);
+                chatEntity.setLastMessage(dbChat.getLastMessage());
+                chatEntity.getMessageList().add(dbChat.getLastMessage());
+                if (!chatEmitter.isCancelled()) {
+                    chatEntity.emitChatUpdate(new ChatDbUpdate(chatEntity, ChatDbUpdate.NEW_MESSAGE));
+                    chatEmitter.onNext(chatEntity);
+                } else {
+                    //TODO: Send push notification
+                }
 
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            }
 
-                    }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
 
-                    }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
 
-                    }
-                }), BUFFER
-        );
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+
+        };
+        return eventListener;
+    }
+
+    private void removeListener() {
+        if (mChatReference == null || eventListener == null) return;
+        mChatReference.removeEventListener(eventListener);
     }
 
     private Observable<List<MessageEntity>> getChatMessages(String chatId) {

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
+import io.collaborapp.collaborapp.utils.TimeFormatter;
 
 import static io.collaborapp.collaborapp.data.model.MessageEntity.MESSAGE_TYPE_IM;
 
@@ -102,6 +104,9 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
         @BindView(R.id.message_text)
         TextView mTextView;
 
+        @BindView(R.id.message_date)
+        TextView mMessageDate;
+
         public ChatMessagesViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -109,6 +114,8 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
 
         public void onBind(int positon) {
             mTextView.setText(mMessagesList.get(positon).getText());
+            TimeFormatter timeFormatter = new TimeFormatter(mMessagesList.get(positon).getCreatedAt());
+            mMessageDate.setText(timeFormatter.formatTime());
         }
     }
 

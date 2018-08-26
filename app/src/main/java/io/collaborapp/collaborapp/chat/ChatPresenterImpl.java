@@ -22,13 +22,11 @@ public class ChatPresenterImpl extends BasePresenterImpl implements ChatContract
     @Inject
     public ChatPresenterImpl(DataManager dataManager, CompositeDisposable compositeDisposable) {
         super(dataManager, compositeDisposable);
-
     }
 
     @Override
     public void onViewInitialized(String chatId) {
         mChatView.updateMessageList(getChat(chatId).getMessageList());
-
         getCompositeDisposable().add(getChat(chatId).getChatObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
