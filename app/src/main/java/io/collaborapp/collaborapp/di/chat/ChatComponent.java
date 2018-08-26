@@ -1,8 +1,8 @@
 package io.collaborapp.collaborapp.di.chat;
 
 import dagger.Subcomponent;
-import io.collaborapp.collaborapp.chat.ChatFragment;
-import io.collaborapp.collaborapp.chat_list.ChatListFragment;
+import io.collaborapp.collaborapp.ui.chat.ChatFragment;
+import io.collaborapp.collaborapp.ui.chat_list.ChatListFragment;
 import io.collaborapp.collaborapp.di.authentication.AppScope;
 
 @AppScope

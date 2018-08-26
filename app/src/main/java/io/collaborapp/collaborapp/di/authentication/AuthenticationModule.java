@@ -2,8 +2,8 @@ package io.collaborapp.collaborapp.di.authentication;
 
 import dagger.Module;
 import dagger.Provides;
-import io.collaborapp.collaborapp.authentication.AuthenticationContract;
-import io.collaborapp.collaborapp.authentication.AuthenticationPresenterImpl;
+import io.collaborapp.collaborapp.ui.authentication.AuthenticationContract;
+import io.collaborapp.collaborapp.ui.authentication.AuthenticationPresenterImpl;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.reactivex.disposables.CompositeDisposable;
 

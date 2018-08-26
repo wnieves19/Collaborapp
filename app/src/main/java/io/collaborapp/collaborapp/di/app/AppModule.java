@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.collaborapp.collaborapp.chat.ChatMessagesAdapter;
+import io.collaborapp.collaborapp.ui.chat.ChatMessagesAdapter;
 import io.collaborapp.collaborapp.data.AppDataManager;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;

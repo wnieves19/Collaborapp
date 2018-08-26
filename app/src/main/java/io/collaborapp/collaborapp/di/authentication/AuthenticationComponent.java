@@ -1,11 +1,11 @@
 package io.collaborapp.collaborapp.di.authentication;
 
 import dagger.Subcomponent;
-import io.collaborapp.collaborapp.authentication.AuthenticationFragment;
-import io.collaborapp.collaborapp.authentication.LoginFragment;
-import io.collaborapp.collaborapp.authentication.SignUpFragment;
-import io.collaborapp.collaborapp.chat.ChatMessagesAdapter;
-import io.collaborapp.collaborapp.chat_list.ChatListActivity;
+import io.collaborapp.collaborapp.ui.authentication.AuthenticationFragment;
+import io.collaborapp.collaborapp.ui.authentication.LoginFragment;
+import io.collaborapp.collaborapp.ui.authentication.SignUpFragment;
+import io.collaborapp.collaborapp.ui.chat.ChatMessagesAdapter;
+import io.collaborapp.collaborapp.ui.chat_list.ChatListActivity;
 
 /**
  * Created by wilfredonieves on 10/27/17.

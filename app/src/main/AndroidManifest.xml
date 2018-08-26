@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".authentication.AuthenticationActivity">
+        <activity android:name=".ui.authentication.AuthenticationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,11 +18,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".chat_list.ChatListActivity"
+            android:name=".ui.chat_list.ChatListActivity"
             android:label="@string/title_activity_chat_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".chat.ChatActivity"
+            android:name=".ui.chat.ChatActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:windowSoftInputMode="adjustResize"></activity>
     </application>
