@@ -25,6 +25,7 @@ import io.collaborapp.collaborapp.data.model.ChatDbUpdate;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
+import io.collaborapp.collaborapp.utils.NotificationManager;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.Observable;
@@ -40,11 +41,15 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     private List<ChatEntity> mChatList;
     private DatabaseReference mChatReference;
     private ChildEventListener eventListener;
+    private NotificationManager mNotificationManager;
 
     @Inject
-    public ChatDbHelperImpl(FirebaseAuth firebaseAuth, FirebaseDatabase firebaseDatabase) {
+    public ChatDbHelperImpl(FirebaseAuth firebaseAuth,
+                            FirebaseDatabase firebaseDatabase,
+                            NotificationManager notificationManager) {
         mFirebaseDatabase = firebaseDatabase;
         mAuth = firebaseAuth;
+        mNotificationManager = notificationManager;
         mChatReference = mFirebaseDatabase.getReference().child("user-chats").child(mAuth.getCurrentUser().getUid());
     }
 
@@ -80,7 +85,7 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                     chatEntity.emitChatUpdate(new ChatDbUpdate(chatEntity, ChatDbUpdate.NEW_MESSAGE));
                     chatEmitter.onNext(chatEntity);
                 } else {
-                    //TODO: Send push notification
+                    mNotificationManager.showChatNotification(chatEntity);
                 }
 
             }

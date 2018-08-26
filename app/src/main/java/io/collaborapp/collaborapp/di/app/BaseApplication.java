@@ -35,12 +35,12 @@ public class BaseApplication extends Application {
     }
 
     public AuthenticationComponent createAuthenticationComponent() {
-        mAuthenticationComponent = mAppComponent.plus(new AuthenticationModule());
+        mAuthenticationComponent = mAppComponent.inject(new AuthenticationModule());
         return mAuthenticationComponent;
     }
 
-    public ChatComponent createChatComponent(){
-        mChatComponent = mAppComponent.plus(new ChatModule());
+    public ChatComponent createChatComponent() {
+        mChatComponent = mAppComponent.inject(new ChatModule());
         return mChatComponent;
     }
 

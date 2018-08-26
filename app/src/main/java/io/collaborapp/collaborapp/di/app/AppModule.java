@@ -21,6 +21,7 @@ import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
 import io.collaborapp.collaborapp.data.db.ChatDbHelper;
 import io.collaborapp.collaborapp.data.db.impl.AuthenticationDbHelperImpl;
 import io.collaborapp.collaborapp.data.db.impl.ChatDbHelperImpl;
+import io.collaborapp.collaborapp.utils.NotificationManager;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -61,6 +62,7 @@ public class AppModule {
     SharedPreferences providesSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
+
     @Provides
     @Singleton
     AuthenticationDbHelper provideAuthDbHelper(AuthenticationDbHelperImpl authDbHelper) {
@@ -75,7 +77,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    DataManager provideDataManager(AppDataManager appDataManager){
+    DataManager provideDataManager(AppDataManager appDataManager) {
         return appDataManager;
     }
 
@@ -85,8 +87,13 @@ public class AppModule {
     }
 
     @Provides
-    LinearLayoutManager provideLinearLayoutManager(){
+    LinearLayoutManager provideLinearLayoutManager() {
         return new LinearLayoutManager(context);
+    }
+
+    @Provides
+    NotificationManager provideNotificationManager() {
+        return new NotificationManager(context);
     }
 }
 
