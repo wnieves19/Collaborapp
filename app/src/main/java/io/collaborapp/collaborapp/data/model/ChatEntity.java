@@ -20,6 +20,7 @@ public class ChatEntity {
     private long createdAt;
 
     private Flowable<ChatDbUpdate> chatObservable;
+
     private FlowableEmitter<ChatDbUpdate> chatFlowableEmitter;
 
     public ChatEntity() {
@@ -30,6 +31,10 @@ public class ChatEntity {
         if (chatFlowableEmitter != null) {
             chatFlowableEmitter.onNext(dbUpdate);
         }
+    }
+
+    public FlowableEmitter<ChatDbUpdate> getEmitter() {
+        return chatFlowableEmitter;
     }
 
     public Flowable<ChatDbUpdate> getChatObservable() {

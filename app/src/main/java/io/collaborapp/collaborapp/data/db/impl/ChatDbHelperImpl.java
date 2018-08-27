@@ -32,7 +32,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static io.reactivex.BackpressureStrategy.LATEST;
+import static io.reactivex.BackpressureStrategy.BUFFER;
 
 @Singleton
 public class ChatDbHelperImpl implements ChatDbHelper {
@@ -56,7 +56,7 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     @Override
     public Flowable<ChatEntity> fetchChatList() {
         removeListener();
-        return Flowable.create(e -> mChatReference.addChildEventListener(getChatEventListener(e)), LATEST);
+        return Flowable.create(e -> mChatReference.addChildEventListener(getChatEventListener(e)), BUFFER);
     }
 
     public ChildEventListener getChatEventListener(FlowableEmitter<ChatEntity> chatEmitter) {
@@ -81,12 +81,8 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                 ChatEntity dbChat = dataSnapshot.getValue(ChatEntity.class);
                 chatEntity.setLastMessage(dbChat.getLastMessage());
                 chatEntity.getMessageList().add(dbChat.getLastMessage());
-                if (!chatEmitter.isCancelled()) {
-                    chatEntity.emitChatUpdate(new ChatDbUpdate(chatEntity, ChatDbUpdate.NEW_MESSAGE));
-                    chatEmitter.onNext(chatEntity);
-                } else {
-                    mNotificationManager.showChatNotification(chatEntity);
-                }
+
+                emitIncomingMessage(chatEntity, chatEmitter);
 
             }
 
@@ -107,6 +103,16 @@ public class ChatDbHelperImpl implements ChatDbHelper {
 
         };
         return eventListener;
+    }
+
+    private void emitIncomingMessage(ChatEntity chatEntity, FlowableEmitter<ChatEntity> chatEmitter) {
+        if (chatEntity.getEmitter() != null && !chatEntity.getEmitter().isCancelled()) {
+            chatEntity.emitChatUpdate(new ChatDbUpdate(chatEntity, ChatDbUpdate.NEW_MESSAGE));
+        } else if (!chatEmitter.isCancelled()) {
+            chatEmitter.onNext(chatEntity);
+        } else {
+            mNotificationManager.showChatNotification(chatEntity);
+        }
     }
 
     private void removeListener() {
