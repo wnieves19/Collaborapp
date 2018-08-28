@@ -6,12 +6,13 @@ import java.util.List;
 
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
+import io.collaborapp.collaborapp.data.model.UserEntity;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public interface ChatDbHelper {
 
-    Observable<Object> createChat(List<String> userId, @Nullable String groupName);
+    Observable<Object> createChat(List<UserEntity> users, @Nullable String groupName);
 
     Observable<Boolean> deleteChat(String[] chatId);
 

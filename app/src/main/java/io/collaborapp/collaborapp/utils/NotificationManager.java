@@ -42,7 +42,7 @@ public class NotificationManager {
                 .setSound(alarmSound)
                 .setContentText(chat.getLastMessage().getType().equals(MESSAGE_TYPE_IM) ? chat.getLastMessage().getText() : "Multimedia Message")
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                .setContentTitle(chat.getTitle().equals("") ? chat.getMembers().get(0) : chat.getTitle())
+                .setContentTitle(chat.getTitle().equals("") ? chat.getUserList().get(0).getFirstName() : chat.getTitle())
                 .setContentIntent(pendingIntent);
 //        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            builder.setSmallIcon(R.drawable.mercurio_logo_white);

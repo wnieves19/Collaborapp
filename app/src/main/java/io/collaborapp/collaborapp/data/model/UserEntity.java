@@ -5,14 +5,27 @@ package io.collaborapp.collaborapp.data.model;
  */
 
 public class UserEntity {
+    public String userId;
+    public String email;
+    public String firstName;
+    public String lastName;
+
+    public UserEntity() {
+
+    }
 
     public UserEntity(String userId, String email) {
         this.userId = userId;
         this.email = email;
     }
 
-    public String userId;
-    public String email;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
 
     public String getUserId() {
         return userId;

@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import io.collaborapp.collaborapp.BasePresenter;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
+import io.collaborapp.collaborapp.data.model.UserEntity;
 
 public interface ChatListContract {
     interface View {
@@ -20,7 +21,7 @@ public interface ChatListContract {
     interface Presenter extends BasePresenter {
         void deleteChats(String[] chatIds);
 
-        void createChat(List<String> userId, @Nullable String groupName);
+        void createChat(List<UserEntity> users, @Nullable String groupName);
 
         void setView(ChatListContract.View view);
 

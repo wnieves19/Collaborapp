@@ -9,16 +9,14 @@ import java.util.TimeZone;
  * Created by Luis Padro 7/12/2016.
  */
 public class TimeFormatter {
-    Long time;
     public static final int TODAY = 0;
     public static final int YESTERDAY = 1;
     public static final int OLDER = 2;
 
-    public TimeFormatter(Long time) {
-        this.time = time;
+    public TimeFormatter() {
     }
 
-    public String formatTime() {
+    public String formatTime(Long time) {
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
         df.setTimeZone(TimeZone.getDefault());
@@ -26,14 +24,14 @@ public class TimeFormatter {
         return df.format(time);
     }
 
-    public String formatDate() {
+    public String formatDate(Long time) {
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy");
         df.setTimeZone(TimeZone.getDefault());
 
         return df.format(time);
     }
 
-    public String formatLongDate() {
+    public String formatLongDate(Long time) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(time);
         int date = c.get(Calendar.DATE);
@@ -65,7 +63,7 @@ public class TimeFormatter {
 
     }
 
-    public int when() {
+    public int when(Long time) {
         Calendar c = Calendar.getInstance();
         int date = c.get(Calendar.DATE);
         int month = c.get(Calendar.MONTH);

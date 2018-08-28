@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import io.collaborapp.collaborapp.BasePresenterImpl;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
+import io.collaborapp.collaborapp.data.model.UserEntity;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -34,8 +35,8 @@ public class ChatListPresenterImpl extends BasePresenterImpl implements ChatList
     }
 
     @Override
-    public void createChat(List<String> userId, @Nullable String groupName) {
-        getCompositeDisposable().add(getDataManager().createChat(userId, groupName)
+    public void createChat(List<UserEntity> users, @Nullable String groupName) {
+        getCompositeDisposable().add(getDataManager().createChat(users, groupName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(newChat -> {

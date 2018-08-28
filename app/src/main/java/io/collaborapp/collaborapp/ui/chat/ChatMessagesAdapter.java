@@ -29,6 +29,8 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
 
     private OnMessageLongClickListener messageLongClickListener;
 
+    private TimeFormatter mTimeFormatter = new TimeFormatter();
+
     @Inject
     Context context;
 
@@ -113,8 +115,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
 
         public void onBind(int positon) {
             mTextView.setText(mMessagesList.get(positon).getText());
-            TimeFormatter timeFormatter = new TimeFormatter(mMessagesList.get(positon).getCreatedAt());
-            mMessageDate.setText(timeFormatter.formatTime());
+            mMessageDate.setText(mTimeFormatter.formatTime(mMessagesList.get(positon).getCreatedAt()));
         }
     }
 

@@ -14,6 +14,7 @@ import io.collaborapp.collaborapp.data.db.AuthenticationDbHelper;
 import io.collaborapp.collaborapp.data.db.ChatDbHelper;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
+import io.collaborapp.collaborapp.data.model.UserEntity;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
@@ -58,8 +59,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable createChat(List<String> userId, @Nullable String groupName) {
-        return mChatDbHelper.createChat(userId, groupName);
+    public Observable createChat(List<UserEntity> users, @Nullable String groupName) {
+        return mChatDbHelper.createChat(users, groupName);
     }
 
     @Override

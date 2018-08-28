@@ -8,20 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
-import io.collaborapp.collaborapp.ui.chat.ChatMessagesAdapter;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
+import io.collaborapp.collaborapp.utils.TimeFormatter;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder> {
 
     private OnItemClickListener mListener;
 
     private List<ChatEntity> mChatList;
+
+    private TimeFormatter mTimeFormatter = new TimeFormatter();
+
 
     public ChatListAdapter(List<ChatEntity> mChatList) {
         this.mChatList = mChatList;
@@ -58,6 +59,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     public class ChatListViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.chat_name)
         TextView mTextView;
+
+        @BindView(R.id.last_message)
+        TextView mLastMessage;
+
+        @BindView(R.id.date_time)
+        TextView mDateTime;
+
         @BindView(R.id.card_view)
         CardView mCardView;
 
@@ -67,7 +75,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         }
 
         public void onBind(int position) {
-            mTextView.setText(mChatList.get(position).getLastMessage().getText());
+            ChatEntity chat = mChatList.get(position);
+
+            mTextView.setText(chat.getTitle());
+
+            mLastMessage.setText(chat.getLastMessage().getText());
+
+            mDateTime.setText(mTimeFormatter.formatTime(chat.getLastMessage().getCreatedAt()));
+
             mCardView.setOnClickListener(v -> {
                 mListener.onItemClick(mChatList.get(position));
             });

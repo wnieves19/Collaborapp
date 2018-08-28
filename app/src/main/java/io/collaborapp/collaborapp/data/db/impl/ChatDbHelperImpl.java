@@ -2,6 +2,7 @@ package io.collaborapp.collaborapp.data.db.impl;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +25,7 @@ import io.collaborapp.collaborapp.data.db.ChatDbHelper;
 import io.collaborapp.collaborapp.data.model.ChatDbUpdate;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
+import io.collaborapp.collaborapp.data.model.UserEntity;
 import io.collaborapp.collaborapp.firebase.RxFirebase;
 import io.collaborapp.collaborapp.utils.NotificationManager;
 import io.reactivex.Flowable;
@@ -69,9 +71,16 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(messageList -> {
                             chat.setMessageList(messageList);
-                            chatEmitter.onNext(chat);
+                            getChatMembers(chat.getChatId()).subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(usersList -> {
+                                        chat.setMemberList(usersList);
+                                        chatEmitter.onNext(chat);
+
+                                    });
 
                         });
+
                 addChatToList(chat);
             }
 
@@ -81,9 +90,7 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                 ChatEntity dbChat = dataSnapshot.getValue(ChatEntity.class);
                 chatEntity.setLastMessage(dbChat.getLastMessage());
                 chatEntity.getMessageList().add(dbChat.getLastMessage());
-
                 emitIncomingMessage(chatEntity, chatEmitter);
-
             }
 
             @Override
@@ -142,6 +149,28 @@ public class ChatDbHelperImpl implements ChatDbHelper {
         );
     }
 
+    private Observable<List<UserEntity>> getChatMembers(String chatId) {
+        return Observable.create(e -> mFirebaseDatabase.getReference().child("chat-members").child(chatId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<UserEntity> list = new ArrayList<>();
+                        for (DataSnapshot memberSnapshot : dataSnapshot.getChildren()) {
+                            UserEntity user = memberSnapshot.getValue(UserEntity.class);
+                            list.add(user);
+                        }
+                        e.onNext(list);
+                        e.onComplete();
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                })
+        );
+    }
+
     @Override
     public List<ChatEntity> getChatList() {
         if (mChatList == null) mChatList = new ArrayList<>();
@@ -163,37 +192,37 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     }
 
     @Override
-    public Observable<Object> createChat(List<String> userIds, @Nullable String groupName) {
-        userIds.add(mAuth.getCurrentUser().getUid());
-
-        ChatEntity existingChat = getExistingChat(userIds);
+    public Observable<Object> createChat(List<UserEntity> users, @Nullable String groupName) {
+//        users.add(mAuth.getCurrentUser().getUid());
+        ChatEntity existingChat = getExistingChat(users);
+        //If existing chat exist return it in Observable
         if (existingChat != null) return Observable.create(emitter -> emitter.onNext(existingChat));
-
+        //Get new chat key
         String chatKey = mFirebaseDatabase.getReference()
                 .child("user-chats")
                 .child(mAuth.getCurrentUser().getUid())
                 .push().getKey();
-
+        //Create new chat instance
         ChatEntity newChat = new ChatEntity(chatKey);
-        newChat.setMembers(userIds);
+        newChat.setMemberList(users);
 
-        for (String userId : userIds) {
-            if (!mAuth.getCurrentUser().getUid().equals(userId)) {
-                createChatToUser(newChat, userId);
+        for (UserEntity user : users) {
+            if (!mAuth.getCurrentUser().getUid().equals(user.getUserId())) {
+                createChatToUser(newChat.toMap(), user.getUserId());
             } else {
-                return RxFirebase.getObservable(createChatToUser(newChat, userId), newChat);
+                return RxFirebase.getObservable(createChatToUser(newChat.toMap(), user.getUserId()), newChat);
             }
         }
 
         return null;
     }
 
-    private ChatEntity getExistingChat(List<String> userIds) {
+    private ChatEntity getExistingChat(List<UserEntity> users) {
         for (ChatEntity chat : getChatList()) {
             int counter = 0;
-            for (String userId : chat.getMembers()) {
-                for (String id : userIds) {
-                    if (id.equals(userId)) {
+            for (UserEntity user : chat.getUserList()) {
+                for (UserEntity newChatUser : users) {
+                    if (newChatUser.getUserId().equals(user.getUserId())) {
                         counter++;
                     }
                 }
@@ -206,11 +235,11 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     }
 
     @NonNull
-    private Task<Void> createChatToUser(ChatEntity newChat, String userId) {
+    private Task<Void> createChatToUser(Map<String, Object> newChat, String userId) {
         return mFirebaseDatabase.getReference()
                 .child("user-chats")
                 .child(userId)
-                .child(newChat.getChatId())
+                .child(newChat.get("chatId").toString())
                 .setValue(newChat);
     }
 
@@ -221,8 +250,8 @@ public class ChatDbHelperImpl implements ChatDbHelper {
         message.setFrom(mAuth.getCurrentUser().getUid());
         mFirebaseDatabase.getReference().child("chat-messages").child(chatId).child(message.getMessageId()).setValue(message);
         Map<String, Object> childUpdates = new HashMap<>();
-        for (String userId : getChat(chatId).getMembers()) {
-            childUpdates.put("/user-chats/" + userId + "/" + chatId + "/lastMessage", message);
+        for (UserEntity user : getChat(chatId).getUserList()) {
+            childUpdates.put("/user-chats/" + user.getUserId() + "/" + chatId + "/lastMessage", message);
         }
         mFirebaseDatabase.getReference().updateChildren(childUpdates);
     }
