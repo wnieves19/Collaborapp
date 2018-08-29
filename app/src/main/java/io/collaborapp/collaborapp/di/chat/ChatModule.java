@@ -12,6 +12,7 @@ import io.collaborapp.collaborapp.ui.chat_list.ChatListContract;
 import io.collaborapp.collaborapp.ui.chat_list.ChatListPresenterImpl;
 import io.collaborapp.collaborapp.data.DataManager;
 import io.collaborapp.collaborapp.di.authentication.AppScope;
+import io.collaborapp.collaborapp.utils.TimeFormatter;
 import io.reactivex.disposables.CompositeDisposable;
 
 @Module
@@ -30,11 +31,11 @@ public class ChatModule {
 
     @Provides
     ChatMessagesAdapter providesChatMessageAdapter() {
-        return new ChatMessagesAdapter(new ArrayList<>());
+        return new ChatMessagesAdapter(new ArrayList<>(), new TimeFormatter());
     }
 
     @Provides
     ChatListAdapter providesChatListAdapter() {
-        return new ChatListAdapter(new ArrayList<>());
+        return new ChatListAdapter(new ArrayList<>(), new TimeFormatter());
     }
 }

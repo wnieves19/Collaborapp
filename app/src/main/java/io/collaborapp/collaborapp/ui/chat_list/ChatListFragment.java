@@ -77,6 +77,7 @@ public class ChatListFragment extends Fragment implements ChatListContract.View,
             mChatListPresenter.onDetach();
     }
 
+
     @Override
     public void openChatView(ChatEntity chat) {
         mAdapter.notifyDataSetChanged();

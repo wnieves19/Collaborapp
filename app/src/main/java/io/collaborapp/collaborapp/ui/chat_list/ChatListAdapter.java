@@ -21,11 +21,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
     private List<ChatEntity> mChatList;
 
-    private TimeFormatter mTimeFormatter = new TimeFormatter();
+    private TimeFormatter mTimeFormatter;
 
 
-    public ChatListAdapter(List<ChatEntity> mChatList) {
+    public ChatListAdapter(List<ChatEntity> mChatList, TimeFormatter timeFormatter) {
         this.mChatList = mChatList;
+        mTimeFormatter = timeFormatter;
     }
 
     @NonNull

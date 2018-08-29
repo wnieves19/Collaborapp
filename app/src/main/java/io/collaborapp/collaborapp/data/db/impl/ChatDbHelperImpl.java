@@ -71,16 +71,13 @@ public class ChatDbHelperImpl implements ChatDbHelper {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(messageList -> {
                             chat.setMessageList(messageList);
-                            getChatMembers(chat.getChatId()).subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(usersList -> {
-                                        chat.setMemberList(usersList);
-                                        chatEmitter.onNext(chat);
-
-                                    });
-
                         });
-
+                getChatMembers(chat.getChatId()).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(usersList -> {
+                            chat.setMemberList(usersList);
+                            chatEmitter.onNext(chat);
+                        });
                 addChatToList(chat);
             }
 
@@ -115,7 +112,8 @@ public class ChatDbHelperImpl implements ChatDbHelper {
     private void emitIncomingMessage(ChatEntity chatEntity, FlowableEmitter<ChatEntity> chatEmitter) {
         if (chatEntity.getEmitter() != null && !chatEntity.getEmitter().isCancelled()) {
             chatEntity.emitChatUpdate(new ChatDbUpdate(chatEntity, ChatDbUpdate.NEW_MESSAGE));
-        } else if (!chatEmitter.isCancelled()) {
+        }
+        if (!chatEmitter.isCancelled()) {
             chatEmitter.onNext(chatEntity);
         } else {
             mNotificationManager.showChatNotification(chatEntity);

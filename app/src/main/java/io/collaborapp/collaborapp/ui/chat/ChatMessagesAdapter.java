@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,13 +30,14 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
 
     private OnMessageLongClickListener messageLongClickListener;
 
-    private TimeFormatter mTimeFormatter = new TimeFormatter();
+    private TimeFormatter mTimeFormatter;
 
     @Inject
     Context context;
 
-    public ChatMessagesAdapter(List<MessageEntity> mMessagesList) {
-        this.mMessagesList = mMessagesList;
+    public ChatMessagesAdapter(ArrayList<MessageEntity> messagesList, TimeFormatter timeFormatter) {
+        mMessagesList = messagesList;
+        mTimeFormatter = timeFormatter;
     }
 
     @Override
