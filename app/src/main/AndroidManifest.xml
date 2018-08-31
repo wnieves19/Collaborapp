@@ -23,7 +23,7 @@
         <activity
             android:name=".ui.chat.ChatActivity"
             android:configChanges="keyboard|keyboardHidden"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

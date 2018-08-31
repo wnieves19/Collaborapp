@@ -46,7 +46,7 @@ public class AuthenticationPresenterImpl extends BasePresenterImpl implements Au
 
     @Override
     public void logInWithGoogle(GoogleSignInAccount account) {
-        mAuthenticationView.showProgress();
+        mAuthenticationView.showLoading();
         getCompositeDisposable().add(getDataManager().signInWithGoogle(account).map((Function<AuthResult, Object>) authResult -> {
             if (authResult.getUser() != null) {
                 Observable<?> observable = getDataManager().createNewUser(authResult.getUser().getUid(), authResult.getUser().getEmail())
@@ -68,7 +68,7 @@ public class AuthenticationPresenterImpl extends BasePresenterImpl implements Au
     @Override
     public void logInWithEmailAndPassword(String email, String password) {
         if (!validateFields(email, password, null)) return;
-        mAuthenticationView.showProgress();
+        mAuthenticationView.showLoading();
         getCompositeDisposable().add(getDataManager().signInWithEmail(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -84,7 +84,7 @@ public class AuthenticationPresenterImpl extends BasePresenterImpl implements Au
             mAuthenticationView.showError("Password and password confirmation are not the same");
             return;
         }
-        mAuthenticationView.showProgress();
+        mAuthenticationView.showLoading();
         getCompositeDisposable().add(getDataManager().signUpWithEmail(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -124,12 +124,12 @@ public class AuthenticationPresenterImpl extends BasePresenterImpl implements Au
     }
 
     private void onTaskSuccess(AuthResult authResult) {
-        mAuthenticationView.hideProgress();
+        mAuthenticationView.hideLoading();
         mAuthenticationView.navigateToHome();
     }
 
     private void onLoginFailed(Throwable e) {
-        mAuthenticationView.hideProgress();
+        mAuthenticationView.hideLoading();
         mAuthenticationView.showError(e.getMessage());
     }
 

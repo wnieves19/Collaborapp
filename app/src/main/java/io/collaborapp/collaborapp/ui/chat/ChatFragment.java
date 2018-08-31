@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.collaborapp.collaborapp.R;
+import io.collaborapp.collaborapp.base.BaseFragment;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.MessageEntity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
@@ -30,7 +31,7 @@ import static io.collaborapp.collaborapp.data.model.MessageEntity.MESSAGE_TYPE_I
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatFragment extends Fragment implements ChatContract.View, ChatMessagesAdapter.OnMessageLongClickListener {
+public class ChatFragment extends BaseFragment implements ChatContract.View, ChatMessagesAdapter.OnMessageLongClickListener {
 
     @Inject
     ChatContract.Presenter mChatPresenter;
@@ -63,6 +64,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatMes
         messagesAdapter.setListener(this);
 
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(messagesAdapter);

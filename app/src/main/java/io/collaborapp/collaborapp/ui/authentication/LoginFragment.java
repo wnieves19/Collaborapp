@@ -18,16 +18,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.collaborapp.collaborapp.R;
+import io.collaborapp.collaborapp.base.BaseFragment;
 import io.collaborapp.collaborapp.ui.chat_list.ChatListActivity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
-
-import static dagger.internal.Preconditions.checkNotNull;
 
 /**
  * Created by wilfredonieves on 10/17/17.
  */
 
-public class LoginFragment extends Fragment implements AuthenticationContract.View {
+public class LoginFragment extends BaseFragment implements AuthenticationContract.View {
     @BindView(R.id.email)
     EditText mEmail;
     @BindView(R.id.password)
@@ -73,27 +72,6 @@ public class LoginFragment extends Fragment implements AuthenticationContract.Vi
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public void showProgress() {
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideProgress() {
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showError(String message) {
-        hideProgress();
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Alert");
-        alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                (dialog, which) -> dialog.dismiss());
-        alertDialog.show();
     }
 
     @Override

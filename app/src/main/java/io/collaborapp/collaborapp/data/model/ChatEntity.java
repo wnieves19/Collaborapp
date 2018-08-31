@@ -58,10 +58,10 @@ public class ChatEntity {
     }
 
     public String getTitle() {
-        if(!"".equals(title))return title;
-        for(UserEntity user : users){
-            if(!user.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                return user.getFirstName()+ " " + user.getLastName();
+        if (!"".equals(title)) return title;
+        for (UserEntity user : users) {
+            if (!user.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                return user.getFirstName() + " " + user.getLastName();
             }
         }
         return null;
@@ -71,7 +71,9 @@ public class ChatEntity {
         return messageList;
     }
 
-    public List<UserEntity> getUserList() { return users; }
+    public List<UserEntity> getUserList() {
+        return users;
+    }
 
     public long getCreatedAt() {
         return createdAt;

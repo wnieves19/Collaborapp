@@ -3,6 +3,7 @@ package io.collaborapp.collaborapp.ui.authentication;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.base.MvpView;
 
 /**
  * Created by wilfredonieves on 4/28/17.
@@ -10,10 +11,7 @@ import io.collaborapp.collaborapp.BasePresenter;
 
 public interface AuthenticationContract {
 
-    interface View {
-        void showProgress();
-
-        void hideProgress();
+    interface View extends MvpView{
 
         void showError(String message);
 

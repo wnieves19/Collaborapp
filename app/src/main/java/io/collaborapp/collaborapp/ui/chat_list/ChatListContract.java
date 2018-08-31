@@ -5,17 +5,20 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import io.collaborapp.collaborapp.BasePresenter;
+import io.collaborapp.collaborapp.base.MvpView;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.data.model.UserEntity;
 
 public interface ChatListContract {
-    interface View {
+    interface View extends MvpView {
 
         void addChatList(List<ChatEntity> chatList);
 
         void updateChatList();
 
         void openChatView(ChatEntity chat);
+
+
     }
 
     interface Presenter extends BasePresenter {

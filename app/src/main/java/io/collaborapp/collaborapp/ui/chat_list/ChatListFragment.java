@@ -19,11 +19,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.collaborapp.collaborapp.R;
+import io.collaborapp.collaborapp.base.BaseFragment;
 import io.collaborapp.collaborapp.ui.chat.ChatActivity;
 import io.collaborapp.collaborapp.data.model.ChatEntity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
 
-public class ChatListFragment extends Fragment implements ChatListContract.View, ChatListAdapter.OnItemClickListener {
+public class ChatListFragment extends BaseFragment implements ChatListContract.View, ChatListAdapter.OnItemClickListener {
 
     @Inject
     ChatListContract.Presenter mChatListPresenter;

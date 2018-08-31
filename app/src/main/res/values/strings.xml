@@ -10,4 +10,6 @@
     <string name="type_message">Type message...</string>
     <string name="channel_name">Chat Notifications</string>
     <string name="channel_description">Registered to show notifications of chat messages</string>
+    <string name="alert">Alert</string>
+    <string name="ok">OK</string>
 </resources>

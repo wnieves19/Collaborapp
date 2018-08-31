@@ -17,13 +17,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.collaborapp.collaborapp.R;
+import io.collaborapp.collaborapp.base.BaseFragment;
 import io.collaborapp.collaborapp.ui.chat_list.ChatListActivity;
 import io.collaborapp.collaborapp.di.app.BaseApplication;
 
-import static dagger.internal.Preconditions.checkNotNull;
-
-
-public class SignUpFragment extends Fragment implements AuthenticationContract.View {
+public class SignUpFragment extends BaseFragment implements AuthenticationContract.View {
 
     @BindView(R.id.email)
     EditText mEmail;
@@ -31,9 +29,6 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
     EditText mPassword;
     @BindView(R.id.confirmPassword)
     EditText mPasswordConfirm;
-    @BindView(R.id.indeterminateBar)
-    ProgressBar mProgressBar;
-
     @Inject
     AuthenticationContract.Presenter mAuthenticationPresenter;
 
@@ -56,27 +51,6 @@ public class SignUpFragment extends Fragment implements AuthenticationContract.V
     public void onDetach() {
         super.onDetach();
         mAuthenticationPresenter.onDetach();
-    }
-
-    @Override
-    public void showProgress() {
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideProgress() {
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showError(String message) {
-        hideProgress();
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Alert");
-        alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                (dialog, which) -> dialog.dismiss());
-        alertDialog.show();
     }
 
     @Override

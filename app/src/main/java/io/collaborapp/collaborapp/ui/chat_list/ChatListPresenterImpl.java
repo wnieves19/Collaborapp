@@ -21,17 +21,19 @@ public class ChatListPresenterImpl extends BasePresenterImpl implements ChatList
     @Inject
     public ChatListPresenterImpl(DataManager dataManager, CompositeDisposable compositeDisposable) {
         super(dataManager, compositeDisposable);
+
+    }
+
+    @Override
+    public void onViewInitialized() {
+        mChatListView.showLoading();
         getCompositeDisposable().add(getDataManager().fetchChatList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(chatEntity -> {
                     mChatListView.addChatList(getChatList());
+                    mChatListView.hideLoading();
                 }));
-    }
-
-    @Override
-    public void onViewInitialized() {
-        mChatListView.addChatList(getChatList());
     }
 
     @Override

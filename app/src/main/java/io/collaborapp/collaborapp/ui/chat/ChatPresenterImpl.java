@@ -27,6 +27,7 @@ public class ChatPresenterImpl extends BasePresenterImpl implements ChatContract
     @Override
     public void onViewInitialized(String chatId) {
         mChatView.updateMessageList(getChat(chatId).getMessageList());
+        mChatView.updateChatTitle(getChat(chatId).getTitle());
         getCompositeDisposable().add(getChat(chatId).getChatObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
