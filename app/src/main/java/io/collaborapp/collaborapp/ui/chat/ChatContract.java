@@ -14,7 +14,7 @@ public interface ChatContract {
     interface View {
         void updateMessageList(List<MessageEntity> messageList);
 
-        void updateChatTitle();
+        void updateChatTitle(String title);
 
         void toggleChatMute();
 

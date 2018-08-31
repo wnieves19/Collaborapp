@@ -36,7 +36,7 @@ public class ChatPresenterImpl extends BasePresenterImpl implements ChatContract
                             mChatView.updateMessageList(chatDbUpdate.getChat().getMessageList());
                             break;
                         case ChatDbUpdate.TITLE_CHANGED:
-
+                            mChatView.updateChatTitle(chatDbUpdate.getChat().getTitle());
                             break;
                         case ChatDbUpdate.CHAT_MUTED:
 

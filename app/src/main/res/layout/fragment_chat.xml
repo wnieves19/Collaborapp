@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.chat.ChatFragment">
+
+    <include layout="@layout/toolbar" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chat_recycler_view"
@@ -14,32 +16,32 @@
         android:scrollbars="vertical" />
 
     <LinearLayout
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="10dp"
         android:layout_marginTop="5dp"
-        android:id="@+id/linear_layout"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="10dp">
 
         <EditText
             android:id="@+id/edit_text_message"
             android:layout_width="wrap_content"
-            android:inputType="textMultiLine|textCapSentences|textLongMessage"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:hint="@string/type_message" />
+            android:hint="@string/type_message"
+            android:inputType="textMultiLine|textCapSentences|textLongMessage" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="5dp"
-            app:fabSize="normal"
-            app:elevation="2dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/send_icon" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/send_icon"
+            app:elevation="2dp"
+            app:fabSize="normal" />
     </LinearLayout>
 
 </RelativeLayout>
