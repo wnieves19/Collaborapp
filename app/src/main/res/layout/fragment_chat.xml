@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/linear_layout" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,24 +23,42 @@
         android:orientation="horizontal"
         android:paddingLeft="10dp">
 
-        <EditText
-            android:id="@+id/edit_text_message"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:hint="@string/type_message"
-            android:inputType="textMultiLine|textCapSentences|textLongMessage" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/button_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/send_icon"
-            app:elevation="2dp"
-            app:fabSize="normal" />
-    </LinearLayout>
+            <EditText
+                android:id="@+id/edit_text_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:hint="@string/type_message"
+                android:inputType="textMultiLine|textCapSentences|textLongMessage" />
+
+            <ImageButton
+                android:id="@+id/camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/camera_icon"
+                android:text="Button" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/send_icon"
+                app:elevation="2dp"
+                app:fabSize="normal" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

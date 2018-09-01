@@ -8,10 +8,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import java.util.List;
 
@@ -51,6 +54,9 @@ public class ChatFragment extends BaseFragment implements ChatContract.View, Cha
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    @BindView(R.id.camera_button)
+    ImageButton mCameraButton;
+
     private String mChatId;
 
     @Override
@@ -70,6 +76,27 @@ public class ChatFragment extends BaseFragment implements ChatContract.View, Cha
         mRecyclerView.setAdapter(messagesAdapter);
         mChatId = getArguments().getString("chatId");
         mChatPresenter.onViewInitialized(mChatId);
+        mMessageEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.equals("")) {
+                    mCameraButton.setVisibility(View.GONE);
+                }
+                if (s.toString().equals("")) {
+                    mCameraButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         return view;
     }
@@ -82,6 +109,12 @@ public class ChatFragment extends BaseFragment implements ChatContract.View, Cha
         mChatPresenter.sendMessage(mChatId, messageEntity);
         mMessageEditText.setText("");
     }
+
+    @OnClick(R.id.camera_button)
+    public void openCamera() {
+
+    }
+
 
     @Override
     public void onAttach(Context context) {
