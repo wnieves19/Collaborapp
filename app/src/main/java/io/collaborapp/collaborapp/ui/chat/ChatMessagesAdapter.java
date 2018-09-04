@@ -54,7 +54,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_message_item_sent, parent, false);
                 break;
             case 2:
-//                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_message_sent, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_message_item_sent_media, parent, false);
                 break;
             case 3:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_message_item_receive, parent, false);

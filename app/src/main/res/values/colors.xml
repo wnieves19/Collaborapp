@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff3725</color>
     <color name="black_effective">#2a2a2a</color>
+    <color name="chat_message_sent_background">#b5caff</color>
 </resources>
