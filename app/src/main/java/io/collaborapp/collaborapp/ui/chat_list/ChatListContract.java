@@ -12,7 +12,7 @@ import io.collaborapp.collaborapp.data.model.UserEntity;
 public interface ChatListContract {
     interface View extends MvpView {
 
-        void addChatList(List<ChatEntity> chatList);
+        void showChatList(List<ChatEntity> chatList);
 
         void updateChatList();
 
@@ -28,7 +28,6 @@ public interface ChatListContract {
 
         void setView(ChatListContract.View view);
 
-        void onViewInitialized();
 
         void muteChat(String chatId);
 

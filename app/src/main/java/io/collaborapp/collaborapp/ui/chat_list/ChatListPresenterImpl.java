@@ -31,7 +31,7 @@ public class ChatListPresenterImpl extends BasePresenterImpl implements ChatList
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(chatEntity -> {
-                    mChatListView.addChatList(getChatList());
+                    mChatListView.showChatList(getChatList());
                     mChatListView.hideLoading();
                 }));
     }
